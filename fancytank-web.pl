@@ -13,7 +13,7 @@ app->defaults(
 
 get '/' => sub {
     my $c = shift;
-    $c->render(template => 'index');
+    $c->redirect_to("/dashboard");
 };
 
 get '/dashboard' => sub {
@@ -49,6 +49,11 @@ get '/logout' => sub {
 get '/register' => sub {
     my $c = shift;
     $c->render(template => 'register');
+};
+
+get '/account' => sub {
+    my $c = shift;
+    $c->render(template => 'account');
 };
 
 app->start;
