@@ -9,4 +9,24 @@ get '/' => sub {
   $c->render(template => 'index');
 };
 
+get '/dashboard' => sub {
+  my $c = shift;
+  $c->render(template => 'dashboard');
+};
+
+get '/tables' => sub {
+  my $c = shift;
+  $c->render(template => 'tables');
+};
+
+get '/forms' => sub {
+  my $c = shift;
+  $c->render(template => 'forms');
+};
+
+get '/buttons' => sub {
+  my $c = shift;
+  $c->render(template => 'buttons');
+};
+
 app->start;
