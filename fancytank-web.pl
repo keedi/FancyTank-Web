@@ -14,4 +14,9 @@ get '/dashboard' => sub {
   $c->render(template => 'dashboard');
 };
 
+get '/table' => sub {
+  my $c = shift;
+  $c->render(template => 'table');
+};
+
 app->start;
