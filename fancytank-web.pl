@@ -24,4 +24,9 @@ get '/forms' => sub {
   $c->render(template => 'forms');
 };
 
+get '/buttons' => sub {
+  my $c = shift;
+  $c->render(template => 'buttons');
+};
+
 app->start;
