@@ -1,0 +1,38 @@
+.ft-table-cell {
+    min-width: 0;
+    padding: 0;
+    height: 71px;
+}
+
+.ft-media-cell-icon,
+.ft-media-cell-filename {
+    display: inline-block;
+}
+
+.ft-media-cell-icon {
+    font-size: 3em;
+    top: 7px;
+    position: relative;
+}
+
+.ft-color-blue {
+    color: #92ceff;
+}
+
+.ft-media-cell-filename {
+    margin-left: 10px;
+    font-size: 1.2em;
+}
+
+/**
+ * vertical-align with Bootstrap 3
+ * https://stackoverflow.com/questions/20547819/vertical-align-with-bootstrap-3/25517025#25517025
+ */
+.vertical-align {
+    display: flex;
+    align-items: center;
+}
+
+.full-height {
+    height: 100%;
+}
