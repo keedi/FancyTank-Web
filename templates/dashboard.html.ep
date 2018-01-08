@@ -3,7 +3,7 @@
 %     { desc => "Morris Charts CSS", path => "../vendor/morrisjs/morris.css" },
 %   ]
 % ;
-% title 'SB Admin 2 Template Test';
+% title 'Dashboard';
 
     <div id="wrapper">
 
