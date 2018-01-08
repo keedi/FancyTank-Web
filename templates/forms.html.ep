@@ -1,4 +1,4 @@
-% layout 'sb-admin-2', csses => [], jses  => [];
+% layout 'sb-admin-2/default', csses => [], jses  => [];
 % title 'Forms';
 
             <div class="row">

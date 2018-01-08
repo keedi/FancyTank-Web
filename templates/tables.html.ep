@@ -1,4 +1,4 @@
-% layout 'sb-admin-2',
+% layout 'sb-admin-2/default',
 %   csses => [
 %     { desc => "DataTables CSS",            path => [ "../vendor/datatables-plugins/dataTables.bootstrap.css" ] },
 %     { desc => "DataTables Responsive CSS", path => [ "../vendor/datatables-responsive/dataTables.responsive.css" ] },
