@@ -1,4 +1,4 @@
-% layout 'default';
+% layout 'test';
 % title 'Welcome';
 <h1>Welcome to the Mojolicious real-time web framework!</h1>
 To learn more, you can browse through the documentation
