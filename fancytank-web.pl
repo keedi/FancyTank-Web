@@ -29,4 +29,14 @@ get '/buttons' => sub {
   $c->render(template => 'buttons');
 };
 
+get '/login' => sub {
+  my $c = shift;
+  $c->render(template => 'login');
+};
+
+get '/register' => sub {
+  my $c = shift;
+  $c->render(template => 'register');
+};
+
 app->start;

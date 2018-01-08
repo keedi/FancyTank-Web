@@ -1,4 +1,4 @@
-% layout 'sb-admin-2',
+% layout 'sb-admin-2/default',
 %   csses => [
 %     { desc => "Social Buttons CSS", path => [ "../vendor/bootstrap-social/bootstrap-social.css" ] },
 %   ],
