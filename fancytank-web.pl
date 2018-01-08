@@ -1,6 +1,16 @@
 #!/usr/bin/env perl
 use Mojolicious::Lite;
 
+app->defaults(
+    %{
+        plugin 'Config' => {
+            default => {
+                site_name => "FancyTank",
+            },
+        },
+    }
+);
+
 get '/' => sub {
   my $c = shift;
   $c->render(template => 'index');
