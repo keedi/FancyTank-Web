@@ -12,38 +12,38 @@ app->defaults(
 );
 
 get '/' => sub {
-  my $c = shift;
-  $c->render(template => 'index');
+    my $c = shift;
+    $c->render(template => 'index');
 };
 
 get '/dashboard' => sub {
-  my $c = shift;
-  $c->render(template => 'dashboard');
+    my $c = shift;
+    $c->render(template => 'dashboard');
 };
 
 get '/tables' => sub {
-  my $c = shift;
-  $c->render(template => 'tables');
+    my $c = shift;
+    $c->render(template => 'tables');
 };
 
 get '/forms' => sub {
-  my $c = shift;
-  $c->render(template => 'forms');
+    my $c = shift;
+    $c->render(template => 'forms');
 };
 
 get '/buttons' => sub {
-  my $c = shift;
-  $c->render(template => 'buttons');
+    my $c = shift;
+    $c->render(template => 'buttons');
 };
 
 get '/login' => sub {
-  my $c = shift;
-  $c->render(template => 'login');
+    my $c = shift;
+    $c->render(template => 'login');
 };
 
 get '/register' => sub {
-  my $c = shift;
-  $c->render(template => 'register');
+    my $c = shift;
+    $c->render(template => 'register');
 };
 
 app->start;
