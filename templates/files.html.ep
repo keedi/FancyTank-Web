@@ -35,7 +35,7 @@
                       <td class="ft-table-cell" style="flex: 1 1 50%;">
                         <div class="vertical-align full-height">
                           <div>
-                            <div class="ft-media-cell-icon ft-color-blue">
+                            <div class="ft-media-cell-icon ft-color-folder">
                               <i class="fa fa-folder"></i>
                             </div>
                             <div class="ft-media-cell-filename">
@@ -72,10 +72,26 @@
 
             </div>
             <div class="col-md-3 hidden-sm hidden-xs">
-              <div>
+              <div class="ft-files-submenu">
                 <ul>
-                  <li> Upload a file </li>
-                  <li> Create a folder </li>
+                  <li>
+                    <div class="fa-files-submenu-item">
+                      <span class="fa-stack">
+                        <i class="fa fa-folder fa-stack-1_4x ft-color-folder"></i>
+                        <i class="fa fa-plus fa-stack-0_9x fa-files-submenu-item-icon-plus-stacked"></i>
+                      </span>
+                    </div>
+                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> Create a folder </div>
+                  </li>
+                  <li>
+                    <div class="fa-files-submenu-item">
+                      <span class="fa-stack">
+                        <i class="fa fa-file fa-stack-1_2x ft-color-file"></i>
+                        <i class="fa fa-plus fa-stack-0_9x fa-files-submenu-item-icon-plus-stacked"></i>
+                      </span>
+                    </div>
+                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> Upload a file </div>
+                  </li>
                 </ul>
               </div>
             </div>
