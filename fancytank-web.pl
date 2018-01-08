@@ -56,4 +56,9 @@ get '/account' => sub {
     $c->render(template => 'account');
 };
 
+get '/setting' => sub {
+    my $c = shift;
+    $c->render(template => 'setting');
+};
+
 app->start;
