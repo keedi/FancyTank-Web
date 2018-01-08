@@ -19,4 +19,9 @@ get '/table' => sub {
   $c->render(template => 'table');
 };
 
+get '/forms' => sub {
+  my $c = shift;
+  $c->render(template => 'forms');
+};
+
 app->start;
