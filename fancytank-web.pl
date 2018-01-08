@@ -9,4 +9,9 @@ get '/' => sub {
   $c->render(template => 'index');
 };
 
+get '/test' => sub {
+  my $c = shift;
+  $c->render(template => 'test');
+};
+
 app->start;
