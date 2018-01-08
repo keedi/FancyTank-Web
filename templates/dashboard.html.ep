@@ -1,4 +1,4 @@
-% layout 'test';
+% layout 'sb-admin-2';
 % title 'SB Admin 2 Template Test';
 
     <div id="wrapper">

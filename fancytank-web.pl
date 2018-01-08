@@ -9,9 +9,9 @@ get '/' => sub {
   $c->render(template => 'index');
 };
 
-get '/test' => sub {
+get '/dashboard' => sub {
   my $c = shift;
-  $c->render(template => 'test');
+  $c->render(template => 'dashboard');
 };
 
 app->start;
