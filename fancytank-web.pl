@@ -61,4 +61,9 @@ get '/setting' => sub {
     $c->render(template => 'setting');
 };
 
+get '/files' => sub {
+    my $c = shift;
+    $c->render(template => 'files');
+};
+
 app->start;

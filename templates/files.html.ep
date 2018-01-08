@@ -1,0 +1,98 @@
+% layout 'sb-admin-2/default',
+%   csses => [
+%     { desc => "Files CSS", path => [ "/css/files.css" ] },
+%   ],
+%   jses => [
+%   ],
+% ;
+% title 'Files';
+
+          <!-- /.row -->
+          <div class="row">
+            <div class="col-md-9">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>
+                      #
+                    </th>
+                    <th>
+                      Name
+                    </th>
+                    <th>
+                      Modified Date
+                    </th>
+                    <th>
+                      Submenu
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  % for my $i ( 1 .. 5 ) {
+                    <tr>
+                      <td class="ft-table-cell" style="flex: 0 0 36px;">
+                      </td>
+                      <td class="ft-table-cell" style="flex: 1 1 50%;">
+                        <div class="vertical-align full-height">
+                          <div>
+                            <div class="ft-media-cell-icon ft-color-folder">
+                              <i class="fa fa-folder"></i>
+                            </div>
+                            <div class="ft-media-cell-filename">
+                              <span>140913 춘천투어 #<%= $i %></span>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="ft-table-cell" style="flex: 0 0 35%;">
+                        <div class="vertical-align full-height">
+                          <span aria-hidden="true">--</span>
+                        </div>
+                      </td>
+                      <td class="ft-table-cell" style="flex: 0 0 15%;">
+                        <div class="vertical-align full-height">
+                          <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i class="fa fa-bars" style="display: block; margin: 3px;"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a href="#">Download</a></li>
+                              <li><a href="#">Starred</a></li>
+                              <li><a href="#">Rename</a></li>
+                              <li><a href="#">Delete</a></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  % }
+
+                </tbody>
+              </table>
+
+            </div>
+            <div class="col-md-3 hidden-sm hidden-xs">
+              <div class="ft-files-submenu">
+                <ul>
+                  <li>
+                    <div class="fa-files-submenu-item">
+                      <span class="fa-stack">
+                        <i class="fa fa-folder fa-stack-1_4x ft-color-folder"></i>
+                        <i class="fa fa-plus fa-stack-0_9x fa-files-submenu-item-icon-plus-stacked"></i>
+                      </span>
+                    </div>
+                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> Create a folder </div>
+                  </li>
+                  <li>
+                    <div class="fa-files-submenu-item">
+                      <span class="fa-stack">
+                        <i class="fa fa-file fa-stack-1_2x ft-color-file"></i>
+                        <i class="fa fa-plus fa-stack-0_9x fa-files-submenu-item-icon-plus-stacked"></i>
+                      </span>
+                    </div>
+                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> Upload a file </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
