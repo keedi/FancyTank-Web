@@ -1,4 +1,8 @@
-% layout 'sb-admin-2';
+% layout 'sb-admin-2',
+%   csses => [
+%     { desc => "Morris Charts CSS", path => "../vendor/morrisjs/morris.css" },
+%   ]
+% ;
 % title 'SB Admin 2 Template Test';
 
     <div id="wrapper">

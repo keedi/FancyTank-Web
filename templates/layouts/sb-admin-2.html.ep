@@ -1,10 +1,4 @@
 <!DOCTYPE html>
-<html>
-  <head><title></title></head>
-  <body></body>
-</html>
-
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -26,11 +20,14 @@
     <!-- Custom CSS -->
     <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
 
-    <!-- Morris Charts CSS -->
-    <link href="../vendor/morrisjs/morris.css" rel="stylesheet">
-
     <!-- Custom Fonts -->
     <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- additional CSS -->
+    % for my $css (@$csses) {
+      <!-- <%= $css->{desc} %> -->
+      <link href="<%= $css->{path} %>" rel="stylesheet">
+    % }
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
