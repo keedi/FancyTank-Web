@@ -1,0 +1,41 @@
+% layout 'sb-admin-2/login';
+% title 'Register';
+
+          <div class="panel-heading" style="min-height: 40px">
+            <div style="float: left;">
+              <h3 class="panel-title">Create an account</h3>
+            </div>
+            <div style="float: right;">
+              <div>or <a href="<%= url_for("/login") %>">log in</a></div>
+            </div>
+          </div>
+          <div style="clear: both;"></div>
+
+          <div class="panel-body">
+            <form role="form">
+              <fieldset>
+                <div class="form-group">
+                  <input class="form-control" placeholder="First name" name="first_name" type="text" autofocus>
+                </div>
+                <div class="form-group">
+                  <input class="form-control" placeholder="Last name" name="last_name" type="text">
+                </div>
+                <div class="form-group">
+                  <input class="form-control" placeholder="E-mail" name="email" type="email">
+                </div>
+                <div class="form-group">
+                  <input class="form-control" placeholder="Password" name="password" type="password" value="">
+                </div>
+                <div class="form-group">
+                  <input class="form-control" placeholder="Confirm password" name="password2" type="password" value="">
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input name="agree_policy" type="checkbox" value="agree_policy Me">I agree to FancyTank terms.
+                  </label>
+                </div>
+                <!-- Change this to a button or input when using this as a form -->
+                <a href="index.html" class="btn btn-lg btn-primary btn-block">Create an account</a>
+              </fieldset>
+            </form>
+          </div>

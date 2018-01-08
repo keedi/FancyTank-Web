@@ -34,4 +34,9 @@ get '/login' => sub {
   $c->render(template => 'login');
 };
 
+get '/register' => sub {
+  my $c = shift;
+  $c->render(template => 'register');
+};
+
 app->start;
