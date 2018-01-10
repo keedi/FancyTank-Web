@@ -1,6 +1,8 @@
 #!/usr/bin/env perl
 use Mojolicious::Lite;
 
+use FancyTank::Schema;
+
 app->defaults(
     %{
         plugin 'Config' => {
@@ -10,6 +12,32 @@ app->defaults(
         },
     }
 );
+
+helper schema => sub {
+    my $self = shift;
+
+    my $schema = FancyTank::Schema->connect(
+        {
+            dsn      => $self->app->config->{database}{dsn},
+            user     => $self->app->config->{database}{user},
+            password => $self->app->config->{database}{pass},
+            %{ $self->app->config->{database}{opts} },
+        }
+    );
+
+    return $schema;
+};
+
+helper rs => sub {
+    my ( $self, $table ) = @_;
+
+    return unless $table;
+
+    my $schema = $self->app->schema;
+    my $rs = $schema->resultset($table);
+
+    return $rs;
+};
 
 get '/' => sub {
     my $c = shift;
