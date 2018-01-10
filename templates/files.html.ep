@@ -1,6 +1,6 @@
 % layout 'sb-admin-2/default',
 %   csses => [
-%     { desc => "Files CSS", path => [ "/css/files.css" ] },
+%     { desc => "File Explorer CSS", path => [ "/css/ft-file-explorer.css" ] },
 %   ],
 %   jses => [
 %   ],
