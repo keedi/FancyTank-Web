@@ -135,11 +135,30 @@ get '/buttons' => sub {
 
 get '/login' => sub {
     my $c = shift;
+
+    #
+    # redirect for logged in user
+    #
+    my $cu = $c->current_user;
+    if ($cu) {
+        $c->redirect_to("/");
+        return;
+    }
+
     $c->render(template => 'login');
 };
 
 post '/login' => sub {
     my $c = shift;
+
+    #
+    # redirect for logged in user
+    #
+    my $cu = $c->current_user;
+    if ($cu) {
+        $c->redirect_to("/");
+        return;
+    }
 
     # http://mojolicious.org/perldoc/Mojolicious/Guides/Rendering#Form-validation
     # Check if parameters have been submitted
@@ -188,11 +207,30 @@ get '/logout' => sub {
 
 get '/register' => sub {
     my $c = shift;
+
+    #
+    # redirect for logged in user
+    #
+    my $cu = $c->current_user;
+    if ($cu) {
+        $c->redirect_to("/");
+        return;
+    }
+
     $c->render(template => 'register');
 };
 
 post '/register' => sub {
     my $c = shift;
+
+    #
+    # redirect for logged in user
+    #
+    my $cu = $c->current_user;
+    if ($cu) {
+        $c->redirect_to("/");
+        return;
+    }
 
     # http://mojolicious.org/perldoc/Mojolicious/Guides/Rendering#Form-validation
     # Check if parameters have been submitted
