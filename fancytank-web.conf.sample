@@ -1,3 +1,22 @@
 +{
+    #
+    # database
+    #
+    database => {
+        dsn    => "dbi:mysql:fancytank:127.0.0.1",
+        user   => 'fancytank',
+        pass   => 'fancytank',
+        opts   => {
+            quote_char        => q{`},
+            mysql_enable_utf8 => 1,
+            on_connect_do     => 'SET NAMES utf8',
+            RaiseError        => 1,
+            AutoCommit        => 1,
+        },
+    },
+
+    #
+    # site
+    #
     site_name => "FancyTank Like Private Dropbox",
 };
