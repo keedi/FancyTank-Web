@@ -1,0 +1,7 @@
+% use experimental qw( smartmatch );
+% for my $i ( 0 .. $#{$inputs} ) {
+% my $input = $inputs->[$i];
+  <div class="form-group <%= $input->{name} ~~ validation->failed ? "has-error" : q{} %>">
+    <input class="form-control" placeholder="<%= $input->{label} %>" name="<%= $input->{name} %>" type="<%= $input->{type} %>" <%= $i == 0 ? "autofocus" : q{} %>>
+  </div>
+% }

@@ -12,15 +12,9 @@
           <div style="clear: both;"></div>
 
           <div class="panel-body">
-            % if ($error_type) {
-              <div class="ft-error alert alert-warning">
-                <%= $error_message %>
-              </div>
-            % }
-
+            %= include "partials/login-error"
             <form role="form" method="post" action="<%= url_for("/register") %>">
               <fieldset>
-                % use experimental qw( smartmatch );
                 % my @inputs = (
                 %   { name => "first_name", type => "text",     label => "First name" },
                 %   { name => "last_name",  type => "text",     label => "Last name" },
@@ -28,12 +22,7 @@
                 %   { name => "password",   type => "password", label => "Password" },
                 %   { name => "password2",  type => "password", label => "Confirm password" },
                 % );
-                % for my $i ( 0 .. $#inputs ) {
-                  % my $input = $inputs[$i];
-                  <div class="form-group <%= $input->{name} ~~ validation->failed ? "has-error" : q{} %>">
-                    <input class="form-control" placeholder="<%= $input->{label} %>" name="<%= $input->{name} %>" type="<%= $input->{type} %>" <%= $i == 0 ? "autofocus" : q{} %>>
-                  </div>
-                % }
+                %= include "partials/form-input", inputs => \@inputs
                 <div class="checkbox">
                   <label>
                     <input name="agree_policy" type="checkbox" value="agree_policy Me">I agree to FancyTank terms.

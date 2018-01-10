@@ -1,0 +1,5 @@
+% if ($error_type) {
+  <div class="ft-error alert alert-warning">
+    <%= $error_message %>
+  </div>
+% }
