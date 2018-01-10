@@ -19,4 +19,5 @@
     # site
     #
     site_name => "FancyTank Like Private Dropbox",
+    time_zone => "Asia/Seoul",
 };

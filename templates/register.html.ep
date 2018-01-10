@@ -12,21 +12,28 @@
           <div style="clear: both;"></div>
 
           <div class="panel-body">
-            <form role="form">
+            % if ($error_type) {
+              <div class="ft-error alert alert-warning">
+                <%= $error_message %>
+              </div>
+            % }
+
+            <form role="form" method="post" action="<%= url_for("/register") %>">
               <fieldset>
-                <div class="form-group">
+                % use experimental qw( smartmatch );
+                <div class="form-group <%= "first_name" ~~ validation->failed ? "has-error" : q{} %>">
                   <input class="form-control" placeholder="First name" name="first_name" type="text" autofocus>
                 </div>
-                <div class="form-group">
+                <div class="form-group <%= "last_name" ~~ validation->failed ? "has-error" : q{} %>">
                   <input class="form-control" placeholder="Last name" name="last_name" type="text">
                 </div>
-                <div class="form-group">
+                <div class="form-group <%= "email" ~~ validation->failed ? "has-error" : q{} %>">
                   <input class="form-control" placeholder="E-mail" name="email" type="email">
                 </div>
-                <div class="form-group">
-                  <input class="form-control" placeholder="Password" name="password" type="password" value="">
+                <div class="form-group <%= "password" ~~ validation->failed ? "has-error" : q{} %>">
+                  <input class="form-control" placeholder="Password (must be at least 8 characters)" name="password" type="password" value="">
                 </div>
-                <div class="form-group">
+                <div class="form-group <%= "password2" ~~ validation->failed ? "has-error" : q{} %>">
                   <input class="form-control" placeholder="Confirm password" name="password2" type="password" value="">
                 </div>
                 <div class="checkbox">
@@ -35,7 +42,7 @@
                   </label>
                 </div>
                 <!-- Change this to a button or input when using this as a form -->
-                <a href="<%= url_for("/login") %>" class="btn btn-lg btn-primary btn-block">Create an account</a>
+                <input class="btn btn-lg btn-primary btn-block" type="submit" value="Create an account">
               </fieldset>
             </form>
           </div>
