@@ -1,3 +1,4 @@
+% my $cu = current_user;
 <!DOCTYPE html>
 <html lang="en">
 
@@ -62,6 +63,9 @@
                         <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#"><%= $cu->first_name %> <%= $cu->last_name %></a>
+                        </li>
+                        <li class="divider"></li>
                         <li><a href="<%= url_for("/account") %>"><i class="fa fa-user fa-fw"></i> User Profile</a>
                         </li>
                         <li><a href="<%= url_for("/setting") %>"><i class="fa fa-gear fa-fw"></i> Settings</a>
