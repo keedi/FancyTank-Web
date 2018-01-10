@@ -92,6 +92,51 @@ get '/login' => sub {
     $c->render(template => 'login');
 };
 
+post '/login' => sub {
+    my $c = shift;
+
+    # http://mojolicious.org/perldoc/Mojolicious/Guides/Rendering#Form-validation
+    # Check if parameters have been submitted
+    my $validation = $c->validation;
+    return $c->render unless $validation->has_data;
+
+    $validation->required("email")->size(5, 255)->email;
+    $validation->required("password");
+
+    if ( $validation->has_error ) {
+        my $msg = "invalid parameters: " . join( ", ", @{ $validation->failed } );
+        $c->app->log->debug($msg);
+        $c->render("login", error_type => "parameter", error_message => $msg );
+        return;
+    }
+
+    my $email    = $c->param("email")    || q{};
+    my $password = $c->param("password") || q{};
+
+    my $log_message = join( ",", $email, $password );
+    $c->app->log->debug($log_message);
+
+    my $user = $c->rs("User")->find( { email => $email } );
+    unless ($user) {
+        my $msg = "user does not exist";
+        $c->app->log->debug($msg);
+        $msg = "User does not exist or password is incorrect.";
+        $c->render("login", error_type => "user_not_found", error_message => $msg );
+        return;
+    }
+    unless ( $user->check_password($password) ) {
+        my $msg = "password is incorrect";
+        $c->app->log->debug($msg);
+        $msg = "User does not exist or password is incorrect.";
+        $c->render( "login", error_type => "user_incorrect_password", error_message => $msg );
+        return;
+    }
+
+    # login success
+
+    $c->redirect_to("/dashboard");
+};
+
 get '/logout' => sub {
     my $c = shift;
     $c->render(template => 'login');
