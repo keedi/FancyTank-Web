@@ -20,6 +20,40 @@ app->defaults(
 );
 
 #
+# CPAN: Mojolicious::Plugin::Authentication
+# https://metacpan.org/pod/Mojolicious::Plugin::Authentication
+#
+plugin "authentication" => {
+    autoload_user   => 1,
+    session_key     => "fancytank",
+    load_user       => sub {
+        my ( $c, $uid ) = @_;
+
+        my $user_obj = $c->app->rs("User")->find({ id => $uid });
+
+        return $user_obj
+    },
+    validate_user => sub {
+        my ( $c, $username, $password, $extradata ) = @_;
+
+        my $user_obj = $c->rs("User")->find({ email => $username });
+        unless ($user_obj) {
+            my $msg = "$username: cannot find such user";
+            $c->app->log->warn($msg);
+            return;
+        }
+
+        unless ( $user_obj->check_password($password) ) {
+            my $msg = "$username: invalid password";
+            $c->app->log->warn($msg);
+            return;
+        }
+
+        return $user_obj->id;
+    },
+};
+
+#
 # https://stackoverflow.com/questions/2049502/what-characters-are-allowed-in-an-email-address
 # http://tools.ietf.org/html/rfc5322
 # http://tools.ietf.org/html/rfc5321
@@ -60,6 +94,18 @@ helper rs => sub {
     my $rs = $schema->resultset($table);
 
     return $rs;
+};
+
+under sub {
+    my $c = shift;
+
+    return 1 if $c->is_user_authenticated;
+    return 1 if $c->req->url->path->to_abs_string eq "/login";
+    return 1 if $c->req->url->path->to_abs_string eq "/register";
+
+    $c->app->log->warn("only valid logged-in user can access");
+    $c->redirect_to("/login");
+    return;
 };
 
 get '/' => sub {
@@ -116,25 +162,23 @@ post '/login' => sub {
     my $log_message = join( ",", $email, $password );
     $c->app->log->debug($log_message);
 
-    my $user = $c->rs("User")->find( { email => $email } );
-    unless ($user) {
-        my $msg = "user does not exist";
-        $c->app->log->debug($msg);
-        $msg = "User does not exist or password is incorrect.";
-        $c->render("login", error_type => "user_not_found", error_message => $msg );
+    if ( $c->authenticate( $email, $password ) ) {
+        #
+        # login success
+        #
+        my $redirect_url = "/";
+        $c->redirect_to( $c->url_for($redirect_url) );
         return;
     }
-    unless ( $user->check_password($password) ) {
-        my $msg = "password is incorrect";
-        $c->app->log->debug($msg);
-        $msg = "User does not exist or password is incorrect.";
-        $c->render( "login", error_type => "user_incorrect_password", error_message => $msg );
+    else {
+        $c->app->log->warn("$email: failed to login");
+        $c->render(
+            "login",
+            error_type    => "login_failed",
+            error_message => "User does not exist or password is incorrect.",
+        );
         return;
     }
-
-    # login success
-
-    $c->redirect_to("/dashboard");
 };
 
 get '/logout' => sub {
