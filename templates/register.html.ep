@@ -12,30 +12,35 @@
           <div style="clear: both;"></div>
 
           <div class="panel-body">
-            <form role="form">
+            % if ($error_type) {
+              <div class="ft-error alert alert-warning">
+                <%= $error_message %>
+              </div>
+            % }
+
+            <form role="form" method="post" action="<%= url_for("/register") %>">
               <fieldset>
-                <div class="form-group">
-                  <input class="form-control" placeholder="First name" name="first_name" type="text" autofocus>
-                </div>
-                <div class="form-group">
-                  <input class="form-control" placeholder="Last name" name="last_name" type="text">
-                </div>
-                <div class="form-group">
-                  <input class="form-control" placeholder="E-mail" name="email" type="email">
-                </div>
-                <div class="form-group">
-                  <input class="form-control" placeholder="Password" name="password" type="password" value="">
-                </div>
-                <div class="form-group">
-                  <input class="form-control" placeholder="Confirm password" name="password2" type="password" value="">
-                </div>
+                % use experimental qw( smartmatch );
+                % my @inputs = (
+                %   { name => "first_name", type => "text",     label => "First name" },
+                %   { name => "last_name",  type => "text",     label => "Last name" },
+                %   { name => "email",      type => "email",    label => "E-mail" },
+                %   { name => "password",   type => "password", label => "Password" },
+                %   { name => "password2",  type => "password", label => "Confirm password" },
+                % );
+                % for my $i ( 0 .. $#inputs ) {
+                  % my $input = $inputs[$i];
+                  <div class="form-group <%= $input->{name} ~~ validation->failed ? "has-error" : q{} %>">
+                    <input class="form-control" placeholder="<%= $input->{label} %>" name="<%= $input->{name} %>" type="<%= $input->{type} %>" <%= $i == 0 ? "autofocus" : q{} %>>
+                  </div>
+                % }
                 <div class="checkbox">
                   <label>
                     <input name="agree_policy" type="checkbox" value="agree_policy Me">I agree to FancyTank terms.
                   </label>
                 </div>
                 <!-- Change this to a button or input when using this as a form -->
-                <a href="<%= url_for("/login") %>" class="btn btn-lg btn-primary btn-block">Create an account</a>
+                <input class="btn btn-lg btn-primary btn-block" type="submit" value="Create an account">
               </fieldset>
             </form>
           </div>
