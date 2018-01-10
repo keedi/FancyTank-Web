@@ -21,21 +21,19 @@
             <form role="form" method="post" action="<%= url_for("/register") %>">
               <fieldset>
                 % use experimental qw( smartmatch );
-                <div class="form-group <%= "first_name" ~~ validation->failed ? "has-error" : q{} %>">
-                  <input class="form-control" placeholder="First name" name="first_name" type="text" autofocus>
-                </div>
-                <div class="form-group <%= "last_name" ~~ validation->failed ? "has-error" : q{} %>">
-                  <input class="form-control" placeholder="Last name" name="last_name" type="text">
-                </div>
-                <div class="form-group <%= "email" ~~ validation->failed ? "has-error" : q{} %>">
-                  <input class="form-control" placeholder="E-mail" name="email" type="email">
-                </div>
-                <div class="form-group <%= "password" ~~ validation->failed ? "has-error" : q{} %>">
-                  <input class="form-control" placeholder="Password (must be at least 8 characters)" name="password" type="password" value="">
-                </div>
-                <div class="form-group <%= "password2" ~~ validation->failed ? "has-error" : q{} %>">
-                  <input class="form-control" placeholder="Confirm password" name="password2" type="password" value="">
-                </div>
+                % my @inputs = (
+                %   { name => "first_name", type => "text",     label => "First name" },
+                %   { name => "last_name",  type => "text",     label => "Last name" },
+                %   { name => "email",      type => "email",    label => "E-mail" },
+                %   { name => "password",   type => "password", label => "Password" },
+                %   { name => "password2",  type => "password", label => "Confirm password" },
+                % );
+                % for my $i ( 0 .. $#inputs ) {
+                  % my $input = $inputs[$i];
+                  <div class="form-group <%= $input->{name} ~~ validation->failed ? "has-error" : q{} %>">
+                    <input class="form-control" placeholder="<%= $input->{label} %>" name="<%= $input->{name} %>" type="<%= $input->{type} %>" <%= $i == 0 ? "autofocus" : q{} %>>
+                  </div>
+                % }
                 <div class="checkbox">
                   <label>
                     <input name="agree_policy" type="checkbox" value="agree_policy Me">I agree to FancyTank terms.
