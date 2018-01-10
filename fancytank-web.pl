@@ -202,7 +202,12 @@ post '/login' => sub {
 
 get '/logout' => sub {
     my $c = shift;
-    $c->render(template => 'login');
+
+    my $user = $c->current_user;
+    $c->app->log->info( $user->email . ": try to logout");
+
+    $c->logout;
+    $c->redirect_to("/login");
 };
 
 get '/register' => sub {
