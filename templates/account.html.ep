@@ -12,13 +12,16 @@
                     <div class="row">
                       <div class="col-lg-6">
                         <form role="form" method="post" action="<%= url_for("/account") %>">
-                          % my @inputs = (
-                          %   { name => "email",      type => "email", label => "E-mail",     value => $cu->email,     disabled => 1 },
-                          %   { name => "first_name", type => "text",  label => "First Name", value => $cu->first_name },
-                          %   { name => "last_name",  type => "text",  label => "Last Name",  value => $cu->last_name  },
-                          %   { name => "time_zone",  type => "text",  label => "Time Zone",  value => $cu->time_zone  },
-                          % );
-                          %= include "partials/form-input", inputs => \@inputs
+                          % {
+                            % my @inputs = (
+                            %   { name => "update_type", type => "hidden",                        value => "basic"      },
+                            %   { name => "email",       type => "email",  label => "E-mail",     value => $cu->email,     disabled => 1 },
+                            %   { name => "first_name",  type => "text",   label => "First Name", value => $cu->first_name },
+                            %   { name => "last_name",   type => "text",   label => "Last Name",  value => $cu->last_name  },
+                            %   { name => "time_zone",   type => "text",   label => "Time Zone",  value => $cu->time_zone  },
+                            % );
+                            %= include "partials/form-input", inputs => \@inputs
+                          % }
                           <button type="reset" class="btn btn-danger">Reset</button>
                           <button type="submit" class="btn btn-primary">Apply</button>
                         </form>
@@ -43,23 +46,38 @@
                   <div class="panel-body">
                     <div class="row">
                       <div class="col-lg-6">
-                        <form role="form">
-
-                          <div class="form-group">
-                            <label>Current Password</label>
-                            <input class="form-control" placeholder="Password" type="password" name="old_password">
-                            <p class="help-block">Enter current password here to change password.</p>
-                          </div>
-                          <div class="form-group">
-                            <label>New Password</label>
-                            <input class="form-control" placeholder="New Password" type="new_password" name="new_password">
-                            <p class="help-block">Enter new password here.</p>
-                          </div>
-                          <div class="form-group">
-                            <label>Confirm New Password</label>
-                            <input class="form-control" placeholder="Confirm New Password" type="confirm_new_password" name="confirm_new_password">
-                            <p class="help-block">Enter new password here again to confirm.</p>
-                          </div>
+                        <form role="form" method="post" action="<%= url_for("/account") %>">
+                          % {
+                            % my @inputs = (
+                            %   {
+                            %     name        => "update_type",
+                            %     value       => "password",
+                            %     type        => "hidden",
+                            %   },
+                            %   {
+                            %     name        => "password",
+                            %     type        => "password",
+                            %     label       => "Current Password",
+                            %     placeholder => "Current Password",
+                            %     help_block  => "Enter current password here to change password.",
+                            %   },
+                            %   {
+                            %     name        => "new_password",
+                            %     type        => "password",
+                            %     label       => "New Password",
+                            %     placeholder => "New Password",
+                            %     help_block  => "Enter new password here. (must be at least 8 characters)",
+                            %   },
+                            %   {
+                            %     name        => "confirm_new_password",
+                            %     type        => "password",
+                            %     label       => "Confirm New Password",
+                            %     placeholder => "Confirm New Password",
+                            %     help_block  => "Enter new password here again to confirm.",
+                            %   },
+                            % );
+                            %= include "partials/form-input", inputs => \@inputs
+                          % }
                           <button type="reset" class="btn btn-danger">Reset</button>
                           <button type="submit" class="btn btn-primary">Apply</button>
                         </form>

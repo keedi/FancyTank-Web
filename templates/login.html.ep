@@ -16,8 +16,8 @@
             <form role="form" method="post" action="<%= url_for("/login") %>">
               <fieldset>
                 % my @inputs = (
-                %   { name => "email",    type => "email",    label => "E-mail" },
-                %   { name => "password", type => "password", label => "Password" },
+                %   { name => "email",    type => "email",    placeholder => "E-mail",  focus => 1 },
+                %   { name => "password", type => "password", placeholder => "Password" },
                 % );
                 %= include "partials/form-input", inputs => \@inputs
                 <div class="checkbox">

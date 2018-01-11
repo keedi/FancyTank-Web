@@ -1,14 +1,25 @@
 % use experimental qw( smartmatch );
-% for my $i ( 0 .. $#{$inputs} ) {
-% my $input = $inputs->[$i];
-  <div class="form-group <%= $input->{name} ~~ validation->failed ? "has-error" : q{} %>">
-    <input
-      class="form-control"
-      placeholder="<%= $input->{label} %>"
-      name="<%= $input->{name} %>"
-      type="<%= $input->{type} %>" <%= $i == 0 ? "autofocus" : q{} %>
-      <%= $input->{disabled} ? "disabled" : q{} %>
-      value="<%= $input->{value} %>"
-      >
-  </div>
+% for my $input (@$inputs) {
+  % if ( $input->{type} eq "hidden" ) {
+    <input type="<%= $input->{type} %>" name="<%= $input->{name} %>" value="<%= $input->{value} %>" >
+  % }
+  % else {
+    <div class="form-group <%= $input->{name} ~~ validation->failed ? "has-error" : q{} %>">
+      % if ( $input->{label} ) {
+        <label><%= $input->{label} %></label>
+      % }
+      <input
+        class="form-control"
+        placeholder="<%= $input->{placeholder} ? $input->{placeholder} : q{} %>"
+        type="<%= $input->{type} %>"
+        name="<%= $input->{name} %>"
+        value="<%= $input->{value} %>"
+        <%= $input->{focus}    ? "autofocus" : q{} %>\
+        <%= $input->{disabled} ? "disabled"  : q{} =%>\
+        >
+      % if ( $input->{help_block} ) {
+        <p class="help-block"><%= $input->{help_block} %></p>
+      % }
+    </div>
+  % }
 % }

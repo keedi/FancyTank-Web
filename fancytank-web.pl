@@ -69,6 +69,14 @@ app->validator->add_check(
         return !$email;
     },
 );
+app->validator->add_check(
+    password => sub {
+        my ( $validation, $name, $value, @args ) = @_;
+        my ( $user_obj ) = @args;
+        my $ret = $user_obj->check_password($value);
+        return !$ret;
+    },
+);
 
 helper schema => sub {
     my $c = shift;
@@ -308,14 +316,28 @@ post '/account' => sub {
 
     my $cu = $c->stash("cu");
 
+    $c->app->log->debug( sprintf( "%s: update_type(%s)", $cu->email, $c->param("update_type") ) );
+
     # http://mojolicious.org/perldoc/Mojolicious/Guides/Rendering#Form-validation
     # Check if parameters have been submitted
     my $validation = $c->validation;
     return $c->render unless $validation->has_data;
 
-    $validation->required("first_name")->size(1, 64);
-    $validation->required("last_name")->size(1, 64);
-    $validation->required("time_zone");
+    if ( $validation->required("update_type")->in( "basic", "password" )->is_valid ) {
+        use experimental qw( smartmatch );
+        given ( $validation->param("update_type") ) {
+            when ("basic") {
+                $validation->required("first_name")->size(1, 64);
+                $validation->required("last_name")->size(1, 64);
+                $validation->required("time_zone");
+            }
+            when ("password") {
+                $validation->required("password")->size(8, 100)->password($cu);
+                $validation->required("new_password")->size(8, 100);
+                $validation->required("confirm_new_password")->equal_to("new_password");
+            }
+        }
+    }
 
     if ( $validation->has_error ) {
         my $msg = "invalid parameters: " . join( ", ", @{ $validation->failed } );
@@ -324,25 +346,36 @@ post '/account' => sub {
         return;
     }
 
-    my $first_name = $c->param("first_name") || q{};
-    my $last_name  = $c->param("last_name")  || q{};
-    my $time_zone  = $c->param("time_zone")  || q{};
+    my $update_type = $c->param("update_type")  || q{};
+    my $first_name  = $c->param("first_name")   || q{};
+    my $last_name   = $c->param("last_name")    || q{};
+    my $time_zone   = $c->param("time_zone")    || q{};
+    my $password    = $c->param("new_password") || q{};
 
-    my $log_message = join( ",", $cu->email, $first_name, $last_name, $time_zone );
+    my $log_message = "update_type($update_type): " . join( ",", $cu->email, $first_name, $last_name, $time_zone, $password );
     $c->app->log->debug($log_message);
 
     #
     # update a user
     #
     my ( $ret, $error ) = try {
-        $cu->update(
-            {
-                first_name => $first_name,
-                last_name  => $last_name,
-                time_zone  => $time_zone,
-            },
-        );
-
+        use experimental qw( smartmatch );
+        my %params;
+        given ($update_type) {
+            when ("basic") {
+                %params = (
+                    first_name => $first_name,
+                    last_name  => $last_name,
+                    time_zone  => $time_zone,
+                );
+            }
+            when ("password") {
+                %params = (
+                    password => $password,
+                );
+            }
+        }
+        $cu->update( \%params );
         ( 1, undef );
     }
     catch {
