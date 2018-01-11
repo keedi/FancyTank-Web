@@ -1,0 +1,1 @@
+ALTER TABLE `user` ADD COLUMN `admin` INT(1) DEFAULT 0 AFTER `enable`;

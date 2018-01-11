@@ -94,6 +94,12 @@ first 40 length for digest, after 10 length for salt(random)
   default_value: 0
   is_nullable: 1
 
+=head2 admin
+
+  data_type: 'integer'
+  default_value: 0
+  is_nullable: 1
+
 =head2 create_time
 
   data_type: 'integer'
@@ -138,6 +144,8 @@ __PACKAGE__->add_columns(
     "time_zone",
     { data_type => "varchar", is_nullable => 0, size => 32 },
     "enable",
+    { data_type => "integer", default_value => 0, is_nullable => 1 },
+    "admin",
     { data_type => "integer", default_value => 0, is_nullable => 1 },
     "create_time",
     {
@@ -185,8 +193,8 @@ __PACKAGE__->add_unique_constraint( "email", ["email"] );
 #>>>
 
 
-# Created by DBIx::Class::Schema::Loader v0.07047 @ 2018-01-11 16:48:22
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jmz8X85SCOdqSC1+dXYxcw
+# Created by DBIx::Class::Schema::Loader v0.07047 @ 2018-01-11 17:02:47
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0q2CxNwox+oLWIMkHvKnaQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
