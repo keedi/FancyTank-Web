@@ -303,6 +303,61 @@ get '/account' => sub {
     $c->render(template => 'account');
 };
 
+post '/account' => sub {
+    my $c = shift;
+
+    my $cu = $c->stash("cu");
+
+    # http://mojolicious.org/perldoc/Mojolicious/Guides/Rendering#Form-validation
+    # Check if parameters have been submitted
+    my $validation = $c->validation;
+    return $c->render unless $validation->has_data;
+
+    $validation->required("first_name")->size(1, 64);
+    $validation->required("last_name")->size(1, 64);
+    $validation->required("time_zone");
+
+    if ( $validation->has_error ) {
+        my $msg = "invalid parameters: " . join( ", ", @{ $validation->failed } );
+        $c->app->log->debug($msg);
+        $c->render("account", error_type => "parameter", error_message => $msg );
+        return;
+    }
+
+    my $first_name = $c->param("first_name") || q{};
+    my $last_name  = $c->param("last_name")  || q{};
+    my $time_zone  = $c->param("time_zone")  || q{};
+
+    my $log_message = join( ",", $cu->email, $first_name, $last_name, $time_zone );
+    $c->app->log->debug($log_message);
+
+    #
+    # update a user
+    #
+    my ( $ret, $error ) = try {
+        $cu->update(
+            {
+                first_name => $first_name,
+                last_name  => $last_name,
+                time_zone  => $time_zone,
+            },
+        );
+
+        ( 1, undef );
+    }
+    catch {
+        ( undef, $_ );
+    };
+    unless ($ret) {
+        my $msg = sprintf( "failed to update a user %s", $cu->email );
+        $c->app->log->debug("$msg: $error");
+        $c->render("account", error_type => "update_user", error_message => $msg );
+        return;
+    }
+
+    $c->render(template => 'account');
+};
+
 get '/setting' => sub {
     my $c = shift;
     $c->render(template => 'setting');

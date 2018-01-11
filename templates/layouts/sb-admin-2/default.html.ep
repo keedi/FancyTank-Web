@@ -113,6 +113,15 @@
             </div>
             <!-- /.col-lg-12 -->
           </div>
+          % if ($error_type) {
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="ft-error alert alert-warning">
+                  <%= $error_message %>
+                </div>
+              </div>
+            </div>
+          % }
           <%= content %>
         </div>
         <!-- /#page-wrapper -->
