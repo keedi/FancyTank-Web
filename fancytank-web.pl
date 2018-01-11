@@ -99,7 +99,12 @@ helper rs => sub {
 under sub {
     my $c = shift;
 
-    return 1 if $c->is_user_authenticated;
+    if ( $c->is_user_authenticated ) {
+        my $cu = $c->current_user;
+        $c->stash( cu => $cu );
+        return 1;
+    }
+
     return 1 if $c->req->url->path->to_abs_string eq "/login";
     return 1 if $c->req->url->path->to_abs_string eq "/register";
 
