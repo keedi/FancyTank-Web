@@ -27,12 +27,7 @@
                           </div>
                           <div class="form-group">
                             <label>Time Zone</label>
-                            <select class="form-control">
-                              <option>KST UTC+9h</option>
-                              <option>UTC UTC+0h</option>
-                              <option>CET UTC+1h</option>
-                              <option>CEST UTC+2h</option>
-                            </select>
+                            <input class="form-control" placeholder="Time Zone" type="text" name="time_zone" value="<%= $cu->time_zone %>">
                           </div>
                           <button type="reset" class="btn btn-danger">Reset</button>
                           <button type="submit" class="btn btn-primary">Apply</button>
