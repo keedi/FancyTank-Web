@@ -49,6 +49,12 @@ plugin "authentication" => {
             return;
         }
 
+        unless ( $user_obj->enable ) {
+            my $msg = "$username: disabled user";
+            $c->app->log->warn($msg);
+            return;
+        }
+
         return $user_obj->id;
     },
 };
