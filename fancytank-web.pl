@@ -69,6 +69,14 @@ app->validator->add_check(
         return !$email;
     },
 );
+app->validator->add_check(
+    password => sub {
+        my ( $validation, $name, $value, @args ) = @_;
+        my ( $user_obj ) = @args;
+        my $ret = $user_obj->check_password($value);
+        return !$ret;
+    },
+);
 
 helper schema => sub {
     my $c = shift;
@@ -99,7 +107,12 @@ helper rs => sub {
 under sub {
     my $c = shift;
 
-    return 1 if $c->is_user_authenticated;
+    if ( $c->is_user_authenticated ) {
+        my $cu = $c->current_user;
+        $c->stash( cu => $cu );
+        return 1;
+    }
+
     return 1 if $c->req->url->path->to_abs_string eq "/login";
     return 1 if $c->req->url->path->to_abs_string eq "/register";
 
@@ -295,6 +308,86 @@ post '/register' => sub {
 
 get '/account' => sub {
     my $c = shift;
+    $c->render(template => 'account');
+};
+
+post '/account' => sub {
+    my $c = shift;
+
+    my $cu = $c->stash("cu");
+
+    $c->app->log->debug( sprintf( "%s: update_type(%s)", $cu->email, $c->param("update_type") ) );
+
+    # http://mojolicious.org/perldoc/Mojolicious/Guides/Rendering#Form-validation
+    # Check if parameters have been submitted
+    my $validation = $c->validation;
+    return $c->render unless $validation->has_data;
+
+    if ( $validation->required("update_type")->in( "basic", "password" )->is_valid ) {
+        use experimental qw( smartmatch );
+        given ( $validation->param("update_type") ) {
+            when ("basic") {
+                $validation->required("first_name")->size(1, 64);
+                $validation->required("last_name")->size(1, 64);
+                $validation->required("time_zone");
+            }
+            when ("password") {
+                $validation->required("password")->size(8, 100)->password($cu);
+                $validation->required("new_password")->size(8, 100);
+                $validation->required("confirm_new_password")->equal_to("new_password");
+            }
+        }
+    }
+
+    if ( $validation->has_error ) {
+        my $msg = "invalid parameters: " . join( ", ", @{ $validation->failed } );
+        $c->app->log->debug($msg);
+        $c->render("account", error_type => "parameter", error_message => $msg );
+        return;
+    }
+
+    my $update_type = $c->param("update_type")  || q{};
+    my $first_name  = $c->param("first_name")   || q{};
+    my $last_name   = $c->param("last_name")    || q{};
+    my $time_zone   = $c->param("time_zone")    || q{};
+    my $password    = $c->param("new_password") || q{};
+
+    my $log_message = "update_type($update_type): " . join( ",", $cu->email, $first_name, $last_name, $time_zone, $password );
+    $c->app->log->debug($log_message);
+
+    #
+    # update a user
+    #
+    my ( $ret, $error ) = try {
+        use experimental qw( smartmatch );
+        my %params;
+        given ($update_type) {
+            when ("basic") {
+                %params = (
+                    first_name => $first_name,
+                    last_name  => $last_name,
+                    time_zone  => $time_zone,
+                );
+            }
+            when ("password") {
+                %params = (
+                    password => $password,
+                );
+            }
+        }
+        $cu->update( \%params );
+        ( 1, undef );
+    }
+    catch {
+        ( undef, $_ );
+    };
+    unless ($ret) {
+        my $msg = sprintf( "failed to update a user %s", $cu->email );
+        $c->app->log->debug("$msg: $error");
+        $c->render("account", error_type => "update_user", error_message => $msg );
+        return;
+    }
+
     $c->render(template => 'account');
 };
 

@@ -16,11 +16,11 @@
             <form role="form" method="post" action="<%= url_for("/register") %>">
               <fieldset>
                 % my @inputs = (
-                %   { name => "first_name", type => "text",     label => "First name" },
-                %   { name => "last_name",  type => "text",     label => "Last name" },
-                %   { name => "email",      type => "email",    label => "E-mail" },
-                %   { name => "password",   type => "password", label => "Password" },
-                %   { name => "password2",  type => "password", label => "Confirm password" },
+                %   { name => "first_name", type => "text",     placeholder => "First name", focus => 1 },
+                %   { name => "last_name",  type => "text",     placeholder => "Last name"   },
+                %   { name => "email",      type => "email",    placeholder => "E-mail"      },
+                %   { name => "password",   type => "password", placeholder => "Password (must be at least 8 characters)" },
+                %   { name => "password2",  type => "password", placeholder => "Confirm password" },
                 % );
                 %= include "partials/form-input", inputs => \@inputs
                 <div class="checkbox">
