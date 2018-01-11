@@ -1,0 +1,23 @@
+% layout 'sb-admin-2/default',
+%   csses => [
+%     { desc => "Error CSS", path => [ "/css/ft-error.css" ] },
+%   ],
+%   jses => [
+%   ],
+% ;
+% title 'Not Found';
+
+            <!-- /.row -->
+            <div class="row">
+              <div class="col-lg-8 col-lg-offset-2">
+                <div class="ft-error-content">
+                  <p class="text-warning">
+                    We couldn’t find the page you’re looking for.
+                    Maybe someone in the team is to blame for this or maybe you’re looking for an existing URL.
+                    In both cases you we have a button to save your navigation right here.
+                  </p>
+                <div>
+              </div>
+              <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
