@@ -403,6 +403,14 @@ post '/account' => sub {
 
 get '/setting' => sub {
     my $c = shift;
+
+    my $cu = $c->stash("cu");
+    unless ( $cu->admin ) {
+        $c->app->log->warn("only admin user can access: " . $cu->email);
+        $c->reply->not_found;
+        return;
+    }
+
     $c->render(template => 'setting');
 };
 
