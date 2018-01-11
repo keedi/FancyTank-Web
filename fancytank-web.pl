@@ -128,6 +128,10 @@ get '/' => sub {
 
 get '/dashboard' => sub {
     my $c = shift;
+
+    my $count_users = $c->rs("User")->count;
+    $c->stash( count_users => $count_users );
+
     $c->render(template => 'dashboard');
 };
 
