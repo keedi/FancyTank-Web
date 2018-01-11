@@ -12,23 +12,13 @@
                     <div class="row">
                       <div class="col-lg-6">
                         <form role="form">
-
-                          <div class="form-group">
-                            <label>E-Mail</label>
-                            <input class="form-control" placeholder="E-Mail" type="email" name="email" disabled value="<%= $cu->email %>">
-                          </div>
-                          <div class="form-group">
-                            <label>First Name</label>
-                            <input class="form-control" placeholder="First Name" type="text" name="first_name" value="<%= $cu->first_name %>">
-                          </div>
-                          <div class="form-group">
-                            <label>Last Name</label>
-                            <input class="form-control" placeholder="Last Name" type="text" name="last_name" value="<%= $cu->last_name %>">
-                          </div>
-                          <div class="form-group">
-                            <label>Time Zone</label>
-                            <input class="form-control" placeholder="Time Zone" type="text" name="time_zone" value="<%= $cu->time_zone %>">
-                          </div>
+                          % my @inputs = (
+                          %   { name => "email",      type => "email",      label => "E-mail",     value => $cu->email,     disabled => 1 },
+                          %   { name => "first_name", type => "first_name", label => "First Name", value => $cu->first_name },
+                          %   { name => "last_name",  type => "last_name",  label => "Last Name",  value => $cu->last_name  },
+                          %   { name => "time_zone",  type => "time_zone",  label => "Time Zone",  value => $cu->time_zone  },
+                          % );
+                          %= include "partials/form-input", inputs => \@inputs
                           <button type="reset" class="btn btn-danger">Reset</button>
                           <button type="submit" class="btn btn-primary">Apply</button>
                         </form>
