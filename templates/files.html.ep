@@ -10,7 +10,7 @@
           <!-- /.row -->
           <div class="row">
             <div class="col-md-9">
-                %= include "partials/file-explorer", loop_count => 7
+              %= include "partials/file-explorer", current_dir => $cu->home_dir
             </div>
             <div class="col-md-3 hidden-sm hidden-xs">
               <div class="ft-files-submenu">
