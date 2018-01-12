@@ -444,9 +444,10 @@ get '/files' => sub {
     my ( $dirs, $files ) = $c->sorted_dirs_files($current_dir);
 
     $c->stash(
-        base_dir => "/files",
-        dirs     => $dirs,
-        files    => $files,
+        breadcrumbs => [],
+        base_dir    => "/files",
+        dirs        => $dirs,
+        files       => $files,
     );
 
     $c->render(template => 'files');
@@ -463,10 +464,13 @@ get '/files/*dir' => sub {
     my $current_dir = path( $cu->home_dir )->child($dir);
     my ( $dirs, $files ) = $c->sorted_dirs_files($current_dir);
 
+    my @breadcrumbs = split "/", $dir;
+
     $c->stash(
-        base_dir => "/files/$dir",
-        dirs     => $dirs,
-        files    => $files,
+        breadcrumbs => \@breadcrumbs,
+        base_dir    => "/files/$dir",
+        dirs        => $dirs,
+        files       => $files,
     );
 
     $c->render(template => 'files');

@@ -103,3 +103,7 @@
 .full-height {
     height: 100%;
 }
+
+.breadcrumb {
+    background: none;
+}
