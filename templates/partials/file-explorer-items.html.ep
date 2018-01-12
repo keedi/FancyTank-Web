@@ -16,7 +16,14 @@
                 </div>
               % }
               <div class="ft-media-cell-filename">
-                <span><%= $path->basename %></span>
+                % if ( $path->is_dir ) {
+                  <a href="<%= $base_dir . "/" . $path->basename %>">
+                    <span><%= $path->basename %></span>
+                  </a>
+                % }
+                % else {
+                  <span><%= $path->basename %></span>
+                % }
               </div>
             </div>
           </div>

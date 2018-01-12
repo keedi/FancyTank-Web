@@ -444,8 +444,9 @@ get '/files' => sub {
     my ( $dirs, $files ) = $c->sorted_dirs_files($current_dir);
 
     $c->stash(
-        dirs  => $dirs,
-        files => $files,
+        base_dir => "/files",
+        dirs     => $dirs,
+        files    => $files,
     );
 
     $c->render(template => 'files');
@@ -463,8 +464,9 @@ get '/files/*dir' => sub {
     my ( $dirs, $files ) = $c->sorted_dirs_files($current_dir);
 
     $c->stash(
-        dirs  => $dirs,
-        files => $files,
+        base_dir => "/files/$dir",
+        dirs     => $dirs,
+        files    => $files,
     );
 
     $c->render(template => 'files');
