@@ -5,9 +5,16 @@
         <td class="ft-table-cell" style="flex: 1 1 50%;">
           <div class="vertical-align full-height">
             <div>
-              <div class="ft-media-cell-icon ft-color-folder">
-                <i class="fa <%= $path->is_dir ? "fa-folder" : "fa-file" %>"></i>
-              </div>
+              % if ( $path->is_dir ) {
+                <div class="ft-media-cell-icon ft-color-folder">
+                  <i class="fa fa-folder"></i>
+                </div>
+              % }
+              % else {
+                <div class="ft-media-cell-icon ft-color-file">
+                  <i class="fa fa-file"></i>
+                </div>
+              % }
               <div class="ft-media-cell-filename">
                 <span><%= $path->basename %></span>
               </div>
