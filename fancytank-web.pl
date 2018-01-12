@@ -3,6 +3,7 @@
 use Mojolicious::Lite;
 
 use Email::Valid;
+use Path::Tiny;
 use Try::Tiny;
 
 use FancyTank::Schema;
@@ -108,6 +109,26 @@ helper rs => sub {
     my $rs = $schema->resultset($table);
 
     return $rs;
+};
+
+helper sorted_dirs_files => sub {
+    my ( $c, $current_dir ) = @_;
+
+    my $iter = $current_dir->iterator;
+    my @dirs;
+    my @files;
+    while ( my $path = $iter->() ) {
+        if ( $path->is_dir ) {
+            push @dirs, $path;
+        }
+        else {
+            push @files, $path;
+        }
+    }
+    my @sorted_dirs  = sort @dirs;
+    my @sorted_files = sort @files;
+
+    return ( \@sorted_dirs, \@sorted_files );
 };
 
 under sub {
@@ -416,6 +437,42 @@ get '/setting' => sub {
 
 get '/files' => sub {
     my $c = shift;
+
+    my $cu = $c->stash("cu");
+
+    my $current_dir = path( $cu->home_dir );
+    my ( $dirs, $files ) = $c->sorted_dirs_files($current_dir);
+
+    $c->stash(
+        breadcrumbs => [],
+        base_dir    => "/files",
+        dirs        => $dirs,
+        files       => $files,
+    );
+
+    $c->render(template => 'files');
+};
+
+get '/files/*dir' => sub {
+    my $c = shift;
+
+    my $cu  = $c->stash("cu");
+    my $dir = $c->param("dir");
+
+    $c->app->log->debug( sprintf( "%s: opening dir: [%s]", $cu->email, $dir ) );
+
+    my $current_dir = path( $cu->home_dir )->child($dir);
+    my ( $dirs, $files ) = $c->sorted_dirs_files($current_dir);
+
+    my @breadcrumbs = split "/", $dir;
+
+    $c->stash(
+        breadcrumbs => \@breadcrumbs,
+        base_dir    => "/files/$dir",
+        dirs        => $dirs,
+        files       => $files,
+    );
+
     $c->render(template => 'files');
 };
 

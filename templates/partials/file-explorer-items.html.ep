@@ -1,0 +1,52 @@
+    % for my $path (@$items) {
+      <tr>
+        <td class="ft-table-cell" style="flex: 0 0 36px;">
+        </td>
+        <td class="ft-table-cell" style="flex: 1 1 50%;">
+          <div class="vertical-align full-height">
+            <div>
+              % if ( $path->is_dir ) {
+                <div class="ft-media-cell-icon ft-color-folder">
+                  <i class="fa fa-folder"></i>
+                </div>
+              % }
+              % else {
+                <div class="ft-media-cell-icon ft-color-file">
+                  <i class="fa fa-file"></i>
+                </div>
+              % }
+              <div class="ft-media-cell-filename">
+                % if ( $path->is_dir ) {
+                  <a href="<%= $base_dir . "/" . $path->basename %>">
+                    <span><%= $path->basename %></span>
+                  </a>
+                % }
+                % else {
+                  <span><%= $path->basename %></span>
+                % }
+              </div>
+            </div>
+          </div>
+        </td>
+        <td class="ft-table-cell" style="flex: 0 0 35%;">
+          <div class="vertical-align full-height">
+            <span aria-hidden="true">--</span>
+          </div>
+        </td>
+        <td class="ft-table-cell" style="flex: 0 0 15%;">
+          <div class="vertical-align full-height">
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-bars" style="display: block; margin: 3px;"></i>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="#">Download</a></li>
+                <li><a href="#">Starred</a></li>
+                <li><a href="#">Rename</a></li>
+                <li><a href="#">Delete</a></li>
+              </ul>
+            </div>
+          </div>
+        </td>
+      </tr>
+    % }

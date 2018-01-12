@@ -16,44 +16,7 @@
     </tr>
   </thead>
   <tbody>
-    % for my $i ( 1 .. $loop_count ) {
-      <tr>
-        <td class="ft-table-cell" style="flex: 0 0 36px;">
-        </td>
-        <td class="ft-table-cell" style="flex: 1 1 50%;">
-          <div class="vertical-align full-height">
-            <div>
-              <div class="ft-media-cell-icon ft-color-folder">
-                <i class="fa fa-folder"></i>
-              </div>
-              <div class="ft-media-cell-filename">
-                <span>140913 춘천투어 #<%= $i %></span>
-              </div>
-            </div>
-          </div>
-        </td>
-        <td class="ft-table-cell" style="flex: 0 0 35%;">
-          <div class="vertical-align full-height">
-            <span aria-hidden="true">--</span>
-          </div>
-        </td>
-        <td class="ft-table-cell" style="flex: 0 0 15%;">
-          <div class="vertical-align full-height">
-            <div class="btn-group">
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-bars" style="display: block; margin: 3px;"></i>
-              </button>
-              <ul class="dropdown-menu">
-                <li><a href="#">Download</a></li>
-                <li><a href="#">Starred</a></li>
-                <li><a href="#">Rename</a></li>
-                <li><a href="#">Delete</a></li>
-              </ul>
-            </div>
-          </div>
-        </td>
-      </tr>
-    % }
-
+    %= include "partials/file-explorer-items", items => $dirs,
+    %= include "partials/file-explorer-items", items => $files,
   </tbody>
 </table>

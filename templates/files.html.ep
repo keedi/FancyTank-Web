@@ -7,10 +7,28 @@
 % ;
 % title 'Files';
 
+          <div>
+            <ol class="breadcrumb">
+              % if (@$breadcrumbs) {
+                <li><a href="<%= url_for("/files") %>">Home</a></li>
+                % my $last_item     = pop @$breadcrumbs;
+                % my $item_base_dir = q{/files};
+                % for my $item (@$breadcrumbs) {
+                  <li><a href="<%= "$item_base_dir/$item" %>"><%= $item %></a></li>
+                  % $item_base_dir .= "/$item";
+                % }
+                <li class="active"><%= $last_item %></li>
+              % }
+              % else {
+                <li class="active">Home</li>
+              % }
+            </ol>
+          </div>
+
           <!-- /.row -->
           <div class="row">
             <div class="col-md-9">
-                %= include "partials/file-explorer", loop_count => 7
+              %= include "partials/file-explorer"
             </div>
             <div class="col-md-3 hidden-sm hidden-xs">
               <div class="ft-files-submenu">
