@@ -3,6 +3,7 @@
 use Mojolicious::Lite;
 
 use Email::Valid;
+use Path::Tiny;
 use Try::Tiny;
 
 use FancyTank::Schema;
@@ -416,6 +417,27 @@ get '/setting' => sub {
 
 get '/files' => sub {
     my $c = shift;
+
+    my $cu   = $c->current_user;
+    my $iter = path( $cu->home_dir )->iterator;
+    my @dirs;
+    my @files;
+    while ( my $path = $iter->() ) {
+        if ( $path->is_dir ) {
+            push @dirs, $path;
+        }
+        else {
+            push @files, $path;
+        }
+    }
+    my @sorted_dirs  = sort @dirs;
+    my @sorted_files = sort @files;
+
+    $c->stash(
+        dirs  => \@sorted_dirs,
+        files => \@sorted_files,
+    );
+
     $c->render(template => 'files');
 };
 
