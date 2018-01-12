@@ -1,0 +1,1 @@
+ALTER TABLE `user` ADD COLUMN `home_dir` VARCHAR(256) DEFAULT NULL AFTER `admin`;
