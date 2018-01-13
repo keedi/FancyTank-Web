@@ -54,8 +54,10 @@
                         % use File::MimeInfo ();
                         % my $fmi  = File::MimeInfo->new;
                         % my $mime = $fmi->mimetype("$file"); # since $file is Path::Tiny object
+                        % use Number::Bytes::Human;
+                        % my $size = Number::Bytes::Human::format_bytes( -s $file );
                         <tr> <th> Name          </th> <td><span class="ft-preview-cell-filename"><%= $file->basename                %></span></td> </tr>
-                        <tr> <th> Size          </th> <td><span class="ft-preview-cell-size"    ><%= -s $file                       %></span></td> </tr>
+                        <tr> <th> Size          </th> <td><span class="ft-preview-cell-size"    ><%= $size                          %></span></td> </tr>
                         <tr> <th> Modified Date </th> <td><span class="ft-preview-cell-mtime"   ><%= $mtime->ymd %> <%= $mtime->hms %></span></td> </tr>
                         <tr> <th> Format        </th> <td><span class="ft-preview-cell-mime"    ><%= $mime                          %></span></td> </tr>
                       </tbody>
