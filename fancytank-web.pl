@@ -61,6 +61,8 @@ plugin "authentication" => {
     },
 };
 
+plugin "RenderFile";
+
 #
 # https://stackoverflow.com/questions/2049502/what-characters-are-allowed-in-an-email-address
 # http://tools.ietf.org/html/rfc5322
@@ -550,11 +552,29 @@ get '/preview/*file' => sub {
     $c->stash(
         breadcrumbs => \@breadcrumbs,
         basename    => $basename,
-        file        => $current_file,
+        file        => $file,
+        path_obj    => $current_file,
         file_stat   => stat($current_file),
     );
 
     $c->render(template => 'preview');
+};
+
+get '/download/*file' => sub {
+    my $c = shift;
+
+    my $cu   = $c->stash("cu");
+    my $file = $c->param("file");
+
+    $c->app->log->debug( sprintf( "%s: download file: [%s]", $cu->email, $file ) );
+
+    my $current_file = $c->get_req_file( $cu->home_dir, $file );
+    unless ($current_file) {
+        $c->reply->not_found;
+        return;
+    }
+
+    $c->render_file( filepath => "$current_file" );
 };
 
 app->start;

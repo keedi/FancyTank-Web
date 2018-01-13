@@ -53,10 +53,10 @@
                         % );
                         % use File::MimeInfo ();
                         % my $fmi  = File::MimeInfo->new;
-                        % my $mime = $fmi->mimetype("$file"); # since $file is Path::Tiny object
+                        % my $mime = $fmi->mimetype("$path_obj"); # since $path_obj is Path::Tiny object
                         % use Number::Bytes::Human;
-                        % my $size = Number::Bytes::Human::format_bytes( -s $file );
-                        <tr> <th> Name          </th> <td><span class="ft-preview-cell-filename"><%= $file->basename                %></span></td> </tr>
+                        % my $size = Number::Bytes::Human::format_bytes( -s $path_obj );
+                        <tr> <th> Name          </th> <td><span class="ft-preview-cell-filename"><%= $path_obj->basename            %></span></td> </tr>
                         <tr> <th> Size          </th> <td><span class="ft-preview-cell-size"    ><%= $size                          %></span></td> </tr>
                         <tr> <th> Modified Date </th> <td><span class="ft-preview-cell-mtime"   ><%= $mtime->ymd %> <%= $mtime->hms %></span></td> </tr>
                         <tr> <th> Format        </th> <td><span class="ft-preview-cell-mime"    ><%= $mime                          %></span></td> </tr>
@@ -73,11 +73,16 @@
                 <ul>
                   <li>
                     <div class="fa-files-submenu-item">
-                      <span class="fa-stack">
+                      % my $download_link = "/download/$file";
+                      <a href="<%= url_for($download_link) %>">
                         <i class="fa fa-download"></i>
-                      </span>
+                      </a>
                     </div>
-                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> Download </div>
+                    <div class="fa-files-submenu-item fa-files-submenu-item-name">
+                      <a href="<%= url_for($download_link) %>">
+                        Download
+                      </a>
+                    </div>
                   </li>
                 </ul>
               </div>
