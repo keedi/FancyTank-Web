@@ -3,6 +3,7 @@
 use Mojolicious::Lite;
 
 use Email::Valid;
+use File::stat;
 use Path::Tiny;
 use Try::Tiny;
 
@@ -152,6 +153,28 @@ helper get_req_dir => sub {
     }
 
     return $current_dir;
+};
+
+helper get_req_file => sub {
+    my ( $c, $base_dir, $remain_file ) = @_;
+
+    unless ( $base_dir ) {
+        $c->app->log->warn("base_dir is needed");
+        return;
+    }
+
+    unless ($remain_file) {
+        $c->app->log->warn("remain_file is needed");
+        return;
+    }
+
+    my $current_file = path($base_dir)->child($remain_file);
+    unless ( $current_file->is_file ) {
+        $c->app->log->warn("req_file must be a valid file: [$current_file]");
+        return;
+    }
+
+    return $current_file;
 };
 
 under sub {
@@ -472,7 +495,7 @@ get '/files' => sub {
 
     $c->stash(
         breadcrumbs => [],
-        base_dir    => "/files",
+        base_dir    => q{},
         dirs        => $dirs,
         files       => $files,
     );
@@ -499,12 +522,39 @@ get '/files/*dir' => sub {
 
     $c->stash(
         breadcrumbs => \@breadcrumbs,
-        base_dir    => "/files/$dir",
+        base_dir    => $dir,
         dirs        => $dirs,
         files       => $files,
     );
 
     $c->render(template => 'files');
+};
+
+get '/preview/*file' => sub {
+    my $c = shift;
+
+    my $cu   = $c->stash("cu");
+    my $file = $c->param("file");
+
+    $c->app->log->debug( sprintf( "%s: preview file: [%s]", $cu->email, $file ) );
+
+    my $current_file = $c->get_req_file( $cu->home_dir, $file );
+    unless ($current_file) {
+        $c->reply->not_found;
+        return;
+    }
+
+    my @breadcrumbs = split "/", $file;
+
+    my $basename = path("/files/$file")->basename;
+    $c->stash(
+        breadcrumbs => \@breadcrumbs,
+        basename    => $basename,
+        file        => $current_file,
+        file_stat   => stat($current_file),
+    );
+
+    $c->render(template => 'preview');
 };
 
 app->start;

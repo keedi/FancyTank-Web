@@ -1,0 +1,83 @@
+% layout 'sb-admin-2/default',
+%   csses => [
+%     { desc => "File Explorer CSS", path => [ "/css/ft-file-explorer.css" ] },
+%   ],
+%   jses => [
+%   ],
+% ;
+% title 'Preview';
+
+          <div>
+            <ol class="breadcrumb">
+              % if (@$breadcrumbs) {
+                <li><a href="<%= url_for("/files") %>">Home</a></li>
+                % my $last_item     = pop @$breadcrumbs;
+                % my $item_base_dir = q{/files};
+                % for my $item (@$breadcrumbs) {
+                  <li><a href="<%= "$item_base_dir/$item" %>"><%= $item %></a></li>
+                  % $item_base_dir .= "/$item";
+                % }
+                <li class="active"><%= $last_item %></li>
+              % }
+              % else {
+                <li class="active">Home</li>
+              % }
+            </ol>
+          </div>
+
+          <!-- /.row -->
+          <div class="row">
+            <div class="col-md-9">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  File Information
+                </div>
+                <div class="panel-body">
+                  <div class="table-responsive">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>
+                            Property
+                          </th>
+                          <th>
+                            Value
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        % use DateTime;
+                        % my $mtime = DateTime->from_epoch(
+                        %   epoch     => $file_stat->mtime,
+                        %   time_zone => $cu->time_zone,
+                        % );
+                        % use File::MimeInfo ();
+                        % my $fmi  = File::MimeInfo->new;
+                        % my $mime = $fmi->mimetype($file);
+                        <tr> <th> Name          </th> <td><span class="ft-preview-cell-filename"><%= $file->basename                %></span></td> </tr>
+                        <tr> <th> Size          </th> <td><span class="ft-preview-cell-size"    ><%= -s $file                       %></span></td> </tr>
+                        <tr> <th> Modified Date </th> <td><span class="ft-preview-cell-mtime"   ><%= $mtime->ymd %> <%= $mtime->hms %></span></td> </tr>
+                        <tr> <th> Format        </th> <td><span class="ft-preview-cell-mime"    ><%= $mime                          %></span></td> </tr>
+                      </tbody>
+                    </table>
+                  </div><!-- /.table-responsive -->
+                </div>
+                <!-- /.panel-body -->
+              </div>
+              <!-- /.panel -->
+            </div>
+            <div class="col-md-3 hidden-sm hidden-xs">
+              <div class="ft-files-submenu">
+                <ul>
+                  <li>
+                    <div class="fa-files-submenu-item">
+                      <span class="fa-stack">
+                        <i class="fa fa-download"></i>
+                      </span>
+                    </div>
+                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> Download </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
