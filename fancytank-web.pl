@@ -131,6 +131,29 @@ helper sorted_dirs_files => sub {
     return ( \@sorted_dirs, \@sorted_files );
 };
 
+helper get_req_dir => sub {
+    my ( $c, $base_dir, $remain_dir ) = @_;
+
+    unless ( $base_dir ) {
+        $c->app->log->warn("base_dir is needed");
+        return;
+    }
+
+    my $current_dir;
+    if ($remain_dir) {
+        $current_dir = path($base_dir)->child($remain_dir);
+    }
+    else {
+        $current_dir = path($base_dir);
+    }
+    unless ( $current_dir->is_dir ) {
+        $c->app->log->warn("req_dir must be a valid directory: [$current_dir]");
+        return;
+    }
+
+    return $current_dir;
+};
+
 under sub {
     my $c = shift;
 
@@ -440,7 +463,11 @@ get '/files' => sub {
 
     my $cu = $c->stash("cu");
 
-    my $current_dir = path( $cu->home_dir );
+    my $current_dir = $c->get_req_dir( $cu->home_dir );
+    unless ($current_dir) {
+        $c->reply->not_found;
+        return;
+    }
     my ( $dirs, $files ) = $c->sorted_dirs_files($current_dir);
 
     $c->stash(
@@ -461,7 +488,11 @@ get '/files/*dir' => sub {
 
     $c->app->log->debug( sprintf( "%s: opening dir: [%s]", $cu->email, $dir ) );
 
-    my $current_dir = path( $cu->home_dir )->child($dir);
+    my $current_dir = $c->get_req_dir( $cu->home_dir, $dir );
+    unless ($current_dir) {
+        $c->reply->not_found;
+        return;
+    }
     my ( $dirs, $files ) = $c->sorted_dirs_files($current_dir);
 
     my @breadcrumbs = split "/", $dir;
