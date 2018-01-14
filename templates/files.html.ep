@@ -3,6 +3,7 @@
 %     { desc => "File Explorer CSS", path => [ "/css/ft-file-explorer.css" ] },
 %   ],
 %   jses => [
+%     { desc => "Handlebars",       path => [ "/vendor/handlebars/handlebars-v4.0.11.js" ] },
 %     { desc => "Page Specific JS", path => [ "/js/files.js" ] },
 %   ],
 % ;
@@ -57,22 +58,27 @@
           </div>
           <!-- /.row -->
 
-          <div aria-hidden="true" aria-labelledby="ft-modal-label-confirm" class="modal fade" id="ft-modal-confirm" role="dialog" tabindex="-1">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button aria-hidden="true" class="close" data-dismiss="modal" type="button">×</button>
-                  <h4 class="modal-title" id="ft-modal-label-confirm">
-                    Delete folder?
-                  </h4>
-                </div>
-                <div class="modal-body">
-                  Are you sure you want to delete <span class="ft-modal-filename">...</span> from your <%= $site_name_short %>?
-                </div>
-                <div class="modal-footer">
-                  <button class="btn btn-primary ft-button-delete" type="button">Delete</button>
-                  <button class="btn btn-default" data-dismiss="modal" type="button">Cancel</button>
-                </div>
-              </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-          </div><!-- /.modal -->
+          <div class="ft-modal">
+          </div>
+
+          <script id="ft-template" type="text/x-handlebars-template">
+	    <div aria-hidden="true" aria-labelledby="ft-modal-label-confirm" class="modal fade" id="ft-modal-confirm" role="dialog" tabindex="-1">
+	      <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+		    <button aria-hidden="true" class="close" data-dismiss="modal" type="button">×</button>
+		    <h4 class="modal-title" id="ft-modal-label-confirm">
+		      {{title}}
+		    </h4>
+		  </div>
+		  <div class="modal-body">
+		    {{{body}}}
+		  </div>
+		  <div class="modal-footer">
+		    <button class="btn btn-primary {{button_class}}" type="button">{{button_label}}</button>
+		    <button class="btn btn-default" data-dismiss="modal" type="button">Cancel</button>
+		  </div>
+		</div><!-- /.modal-content -->
+	      </div><!-- /.modal-dialog -->
+	    </div><!-- /.modal -->
+	  </script>
