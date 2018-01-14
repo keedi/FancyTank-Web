@@ -55,6 +55,8 @@
       $(".ft-modal").html(html);
       $("#ft-modal-confirm").modal("show");
 
+      // FIXME : doesn't work now
+      // rename action must be separated later
       var dotIdx = filename.lastIndexOf(".");
       $(".ft-modal-dest-filename")[0].setSelectionRange(0, dotIdx);
 
