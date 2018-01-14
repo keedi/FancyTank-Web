@@ -2,6 +2,7 @@
 
 use Mojolicious::Lite;
 
+use DateTime;
 use Email::Valid;
 use File::stat;
 use Path::Tiny;
@@ -173,6 +174,28 @@ helper get_req_file => sub {
     my $current_file = path($base_dir)->child($remain_file);
     unless ( $current_file->is_file ) {
         $c->app->log->warn("req_file must be a valid file: [$current_file]");
+        return;
+    }
+
+    return $current_file;
+};
+
+helper get_req_path => sub {
+    my ( $c, $base_dir, $remain_path ) = @_;
+
+    unless ( $base_dir ) {
+        $c->app->log->warn("base_dir is needed");
+        return;
+    }
+
+    unless ($remain_path) {
+        $c->app->log->warn("remain_path is needed");
+        return;
+    }
+
+    my $current_file = path($base_dir)->child($remain_path);
+    unless ( $current_file->exists ) {
+        $c->app->log->warn("req_file must be existed: [$current_file]");
         return;
     }
 
@@ -575,6 +598,41 @@ get '/download/*file' => sub {
     }
 
     $c->render_file( filepath => "$current_file" );
+};
+
+del '/api/files/*file/delete' => sub {
+    my $c = shift;
+
+    my $cu   = $c->stash("cu");
+    my $file = $c->param("file");
+
+    $c->app->log->debug( sprintf( "%s: api.delete file: [%s]", $cu->email, $file ) );
+
+    my $current_file = $c->get_req_path( $cu->home_dir, $file );
+    unless ($current_file) {
+        my $error_code = 400;
+        my $error_msg  = "The requested resource is not valid";
+        $c->render(
+            status => $error_code,
+            json   => {
+                Message   => $error_msg,
+                ErrorCode => $error_code,
+                Created   => DateTime->now( time_zone => $cu->time_zone ),
+                Request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+            },
+        );
+        return;
+    }
+
+    $current_file->remove_tree;
+
+    $c->render(
+        json   => {
+            Message => "Success",
+            Created => DateTime->now( time_zone => $cu->time_zone ),
+            Request => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+        },
+    );
 };
 
 app->start;
