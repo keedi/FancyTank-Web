@@ -38,6 +38,15 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    <script>
+      % use Mojo::JSON;
+      % my $config = {
+      %   site_name_short => $site_name_short,
+      % };
+      % my $json = Mojo::JSON::encode_json($config);
+      var CONFIG = <%== $json %>;
+    </script>
+
 </head>
 
 <body>
