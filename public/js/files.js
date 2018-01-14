@@ -7,11 +7,21 @@
     });
 
     $(document).on("click", ".ft-button-delete", function () {
-      console.log("delete button is clicked");
       /**
-       * delete
+       * request to delete file on server
        */
-      // ...
+      //...
+
+      /**
+       * hide from file explorer
+       */
+      var filename = $(".modal-body .ft-modal-filename").text();
+      var trFile   = $(".ft-button-popup[data-filename=" + filename + "]").closest("tr");
+      trFile.remove();
+
+      /**
+       * hide modal
+       */
       $('#ft-modal-confirm').modal('hide');
     });
 
