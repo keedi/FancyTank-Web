@@ -47,8 +47,8 @@
                   <li><a href="<%= url_for("/download/$sub_uri") %>">Download</a></li>
                 % }
                 <li><a href="#">Starred</a></li>
-                <li><a href="#">Rename</a></li>
-                <li><a href="#" class="ft-button-popup" data-filename="<%= $path->basename %>">Delete</a></li>
+                <li><a href="#" class="ft-button-popup" data-action="rename" data-filename="<%= $path->basename %>">Rename</a></li>
+                <li><a href="#" class="ft-button-popup" data-action="delete" data-filename="<%= $path->basename %>">Delete</a></li>
               </ul>
             </div>
           </div>
