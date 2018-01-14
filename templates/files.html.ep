@@ -41,7 +41,7 @@
                         <i class="fa fa-plus fa-stack-0_9x fa-files-submenu-item-icon-plus-stacked"></i>
                       </span>
                     </div>
-                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> Create a folder </div>
+                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> New folder </div>
                   </li>
                   <li>
                     <div class="fa-files-submenu-item">
