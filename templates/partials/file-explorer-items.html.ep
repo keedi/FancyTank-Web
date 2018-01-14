@@ -1,6 +1,7 @@
     % for my $path (@$items) {
       % my $sub_uri = ( $base_dir ? "$base_dir/" : q{} ) . $path->basename;
       <tr
+        class="ft-table-row-file"
         data-api-url="<%= url_for("/api/files/$sub_uri") %>"
         data-filename="<%= $path->basename %>"
         data-is-directory="<%= $path->is_dir ? "true" : "false" %>"

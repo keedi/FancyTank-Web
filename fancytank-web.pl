@@ -1,5 +1,7 @@
 #!/usr/bin/env perl
 
+use utf8;
+
 use Mojolicious::Lite;
 
 use DateTime;
@@ -625,6 +627,96 @@ del '/api/files/*file/delete' => sub {
     }
 
     $current_file->remove_tree;
+
+    $c->render(
+        json   => {
+            Message => "Success",
+            Created => DateTime->now( time_zone => $cu->time_zone ),
+            Request => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+        },
+    );
+};
+
+put '/api/files/*file/rename' => sub {
+    my $c = shift;
+
+    my $cu       = $c->stash("cu");
+    my $file     = $c->param("file");
+    my $filename = $c->param("filename");
+
+    $c->app->log->debug( sprintf( "%s: api.rename file: [%s] -> [%s]", $cu->email, $file, $filename ) );
+
+    my $current_file = $c->get_req_path( $cu->home_dir, $file );
+    unless ($current_file) {
+        my $error_code = 400;
+        my $error_msg  = "The requested resource is not valid";
+        $c->render(
+            status => $error_code,
+            json   => {
+                Message   => $error_msg,
+                ErrorCode => $error_code,
+                Created   => DateTime->now( time_zone => $cu->time_zone ),
+                Request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+            },
+        );
+        return;
+    }
+
+    my $dest = $current_file->parent->child($filename);
+    {
+        my $p1 = path( $cu->home_dir )->realpath;
+        my ( $p2, $error ) = try {
+            my $_path = $dest->realpath;
+            ( $_path, undef );
+        }
+        catch {
+            ( undef, $_ );
+        };
+        unless ($p2) {
+            $c->app->log->warn("cannot resolve path: [$dest]");
+
+            my $error_code = 400;
+            my $error_msg  = "The requested new filename cannot be resolved";
+            $c->render(
+                status => $error_code,
+                json   => {
+                    Message   => $error_msg,
+                    ErrorCode => $error_code,
+                    Created   => DateTime->now( time_zone => $cu->time_zone ),
+                    Request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+                },
+            );
+            return;
+        }
+        unless ( $p1->subsumes($p2) ) {
+            $c->app->log->warn("unallowed path: [$dest] [$p2]");
+
+            my $error_code = 400;
+            my $error_msg  = "The requested new filename is not valid";
+            $c->render(
+                status => $error_code,
+                json   => {
+                    Message   => $error_msg,
+                    ErrorCode => $error_code,
+                    Created   => DateTime->now( time_zone => $cu->time_zone ),
+                    Request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+                },
+            );
+            return;
+        }
+
+        $c->app->log->info(
+            sprintf(
+                "%s: move file: [%s] -> [%s]",
+                $cu->email,
+                $current_file,
+                $p2,
+            )
+        );
+    }
+
+    # rename file
+    $current_file->move($dest);
 
     $c->render(
         json   => {

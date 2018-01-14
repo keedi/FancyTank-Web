@@ -15,16 +15,22 @@
 
       var context;
       if (action === "delete") {
+        bodyHtml
+          = '<div class="ft-modal-data" data-filename="' + filename + '">'
+          + '  Are you sure you want to delete <span class="ft-modal-filename">' + filename + '</span> from your ' + CONFIG.site_name_short + '?'
+          + "</div>"
+          ;
+
         context  = {
           title:        "Delete " + fileType + "?",
-          body:         'Are you sure you want to delete <span class="ft-modal-filename">' + filename + '</span> from your ' + CONFIG.site_name_short + '?',
+          body:         bodyHtml,
           button_label: "Delete",
           button_class: "ft-button-delete"
         };
       }
       else if (action === "rename") {
         bodyHtml
-          = "<div>"
+          = '<div class="ft-modal-data" data-filename="' + filename + '">'
           + '  <div class="form-group">'
           + "    <label>Enter the file name to be changed.</label>"
           + '    <input class="form-control ft-modal-dest-filename" placeholder="Enter text" value="' + filename + '" autofocus="autofocus">'
@@ -56,8 +62,8 @@
     });
 
     $(document).on("click", ".ft-button-delete", function (e) {
-      var filename = $(".modal-body .ft-modal-filename").text();
-      var $trFile  = $(".ft-button-popup[data-filename='" + filename + "']").closest("tr");
+      var filename = $(".modal-body .ft-modal-data").data("filename");
+      var $trFile  = $(".ft-table-row-file[data-filename='" + filename + "']");
       var apiUrl   = $trFile.data("api-url");
 
       /**
@@ -71,6 +77,40 @@
            * hide from file explorer
            */
           $trFile.remove();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          $(".ft-error-api-msg").text(jqXHR.responseJSON.Message);
+          $(".ft-error-api").show(400, function() {
+            setTimeout(function() {
+              $(".ft-error-api").fadeOut(600);
+            }, 3000);
+          });
+        }
+      });
+
+      /**
+       * hide modal
+       */
+      $('#ft-modal-confirm').modal('hide');
+    });
+
+    $(document).on("click", ".ft-button-rename", function (e) {
+      var filename     = $(".modal-body .ft-modal-data").data("filename");
+      var destFilename = $(".ft-modal-dest-filename").val();
+      var $trFile      = $(".ft-table-row-file[data-filename='" + filename + "']");
+      var apiUrl       = $trFile.data("api-url");
+
+      /**
+       * request to delete file on server
+       */
+      $.ajax({
+        url: apiUrl + "/rename",
+        type: "PUT",
+        data: { filename: destFilename },
+        success: function(result) {
+          /**
+           * rename the display filename
+           */
         },
         error: function(jqXHR, textStatus, errorThrown) {
           $(".ft-error-api-msg").text(jqXHR.responseJSON.Message);
