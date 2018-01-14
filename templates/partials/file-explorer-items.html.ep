@@ -44,7 +44,7 @@
               </button>
               <ul class="dropdown-menu">
                 % if ( $path->is_file ) {
-                  <li><a href="#">Download</a></li>
+                  <li><a href="<%= url_for("/download/$sub_uri") %>">Download</a></li>
                 % }
                 <li><a href="#">Starred</a></li>
                 <li><a href="#">Rename</a></li>
