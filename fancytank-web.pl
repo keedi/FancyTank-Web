@@ -662,6 +662,7 @@ put '/api/files/*file/rename' => sub {
         return;
     }
 
+    my $is_same_dir = 0;
     my $dest = $current_file->parent->child($filename);
     {
         my $p1 = path( $cu->home_dir )->realpath;
@@ -704,6 +705,7 @@ put '/api/files/*file/rename' => sub {
             );
             return;
         }
+        $is_same_dir = 1 if $current_file->parent eq $p2->parent;
 
         $c->app->log->info(
             sprintf(
@@ -720,9 +722,11 @@ put '/api/files/*file/rename' => sub {
 
     $c->render(
         json   => {
-            Message => "Success",
-            Created => DateTime->now( time_zone => $cu->time_zone ),
-            Request => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+            message      => "Success",
+            isSameDir    => $is_same_dir,
+            destFilename => $dest->basename,
+            created      => DateTime->now( time_zone => $cu->time_zone ),
+            request      => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
         },
     );
 };

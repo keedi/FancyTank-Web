@@ -79,7 +79,7 @@
           $trFile.remove();
         },
         error: function(jqXHR, textStatus, errorThrown) {
-          $(".ft-error-api-msg").text(jqXHR.responseJSON.Message);
+          $(".ft-error-api-msg").text(jqXHR.responseJSON.message);
           $(".ft-error-api").show(400, function() {
             setTimeout(function() {
               $(".ft-error-api").fadeOut(600);
@@ -108,12 +108,17 @@
         type: "PUT",
         data: { filename: destFilename },
         success: function(result) {
-          /**
-           * rename the display filename
-           */
+          if (result.isSameDir === 1) {
+            // rename
+            $trFile.find(".ft-media-cell-filename span").text(destFilename);
+          }
+          else {
+            // remove
+            $trFile.remove();
+          }
         },
         error: function(jqXHR, textStatus, errorThrown) {
-          $(".ft-error-api-msg").text(jqXHR.responseJSON.Message);
+          $(".ft-error-api-msg").text(jqXHR.responseJSON.message);
           $(".ft-error-api").show(400, function() {
             setTimeout(function() {
               $(".ft-error-api").fadeOut(600);
