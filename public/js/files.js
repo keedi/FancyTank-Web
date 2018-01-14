@@ -3,7 +3,8 @@
 
     $(document).on("click", ".ft-button-popup", function (e) {
       var action   = $(this).data("action");
-      var filename = $(this).data("filename");
+      var $trFile  = $(this).closest("tr");
+      var filename = $trFile.data("filename");
       var source   = $("#ft-template").html();
       var template = Handlebars.compile(source);
 
@@ -36,8 +37,8 @@
 
     $(document).on("click", ".ft-button-delete", function (e) {
       var filename = $(".modal-body .ft-modal-filename").text();
-      var trFile   = $(".ft-button-popup[data-filename='" + filename + "']").closest("tr");
-      var apiUrl   = trFile.data("api-url");
+      var $trFile  = $(".ft-button-popup[data-filename='" + filename + "']").closest("tr");
+      var apiUrl   = $trFile.data("api-url");
 
       /**
        * request to delete file on server
@@ -49,7 +50,7 @@
           /**
            * hide from file explorer
            */
-          trFile.remove();
+          $trFile.remove();
         },
         error: function(jqXHR, textStatus, errorThrown) {
           $(".ft-error-api-msg").text(jqXHR.responseJSON.Message);

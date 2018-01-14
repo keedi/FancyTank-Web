@@ -1,6 +1,9 @@
     % for my $path (@$items) {
       % my $sub_uri = ( $base_dir ? "$base_dir/" : q{} ) . $path->basename;
-      <tr data-api-url="<%= url_for("/api/files/$sub_uri") %>">
+      <tr
+        data-api-url="<%= url_for("/api/files/$sub_uri") %>"
+        data-filename="<%= $path->basename %>"
+        >
         <td class="ft-table-cell" style="flex: 0 0 36px;">
         </td>
         <td class="ft-table-cell" style="flex: 1 1 50%;">
@@ -47,8 +50,8 @@
                   <li><a href="<%= url_for("/download/$sub_uri") %>">Download</a></li>
                 % }
                 <li><a href="#">Starred</a></li>
-                <li><a href="#" class="ft-button-popup" data-action="rename" data-filename="<%= $path->basename %>">Rename</a></li>
-                <li><a href="#" class="ft-button-popup" data-action="delete" data-filename="<%= $path->basename %>">Delete</a></li>
+                <li><a href="#" class="ft-button-popup" data-action="rename">Rename</a></li>
+                <li><a href="#" class="ft-button-popup" data-action="delete">Delete</a></li>
               </ul>
             </div>
           </div>
