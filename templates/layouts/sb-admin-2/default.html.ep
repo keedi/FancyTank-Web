@@ -124,6 +124,12 @@
               </div>
             </div>
           % }
+          <div class="row ft-error-api" style="display: none;">
+            <div class="col-lg-12">
+              <div class="ft-error-api-msg alert alert-warning">
+              </div>
+            </div>
+          </div>
           <%= content %>
         </div>
         <!-- /#page-wrapper -->

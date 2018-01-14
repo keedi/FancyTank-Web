@@ -1,5 +1,6 @@
     % for my $path (@$items) {
-      <tr>
+      % my $sub_uri = ( $base_dir ? "$base_dir/" : q{} ) . $path->basename;
+      <tr data-api-url="<%= url_for("/api/files/$sub_uri") %>">
         <td class="ft-table-cell" style="flex: 0 0 36px;">
         </td>
         <td class="ft-table-cell" style="flex: 1 1 50%;">
@@ -17,12 +18,12 @@
               % }
               <div class="ft-media-cell-filename">
                 % if ( $path->is_dir ) {
-                  <a href="/files/<%= $base_dir ? "$base_dir/" : q{} %><%= $path->basename %>">
+                  <a href="<%= url_for("/files/$sub_uri") %>">
                     <span><%= $path->basename %></span>
                   </a>
                 % }
                 % else {
-                  <a href="/preview/<%= $base_dir ? "$base_dir/" : q{} %><%= $path->basename %>">
+                  <a href="<%= url_for("/preview/$sub_uri") %>">
                     <span><%= $path->basename %></span>
                   </a>
                 % }
@@ -45,7 +46,7 @@
                 <li><a href="#">Download</a></li>
                 <li><a href="#">Starred</a></li>
                 <li><a href="#">Rename</a></li>
-                <li><a href="#">Delete</a></li>
+                <li><a href="#" class="ft-button-popup" data-target="#ft-modal-confirm" data-toggle="modal" data-filename="<%= $path->basename %>">Delete</a></li>
               </ul>
             </div>
           </div>
