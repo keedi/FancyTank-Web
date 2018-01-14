@@ -45,7 +45,7 @@
                 <li><a href="#">Download</a></li>
                 <li><a href="#">Starred</a></li>
                 <li><a href="#">Rename</a></li>
-                <li><a href="#">Delete</a></li>
+                <li><a href="#" class="ft-button-popup" data-target="#ft-modal-confirm" data-toggle="modal" data-filename="<%= $path->basename %>">Delete</a></li>
               </ul>
             </div>
           </div>

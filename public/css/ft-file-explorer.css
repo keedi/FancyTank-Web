@@ -70,6 +70,13 @@
 }
 
 /**
+ * modal
+ */
+.ft-modal-filename {
+    font-weight: bold;
+}
+
+/**
  * http://jsfiddle.net/MrPolywhirl/25bfvxgo/
  */
 .fa-stack-1_2x {
