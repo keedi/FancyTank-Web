@@ -23,9 +23,18 @@
         };
       }
       else if (action === "rename") {
+        bodyHtml
+          = "<div>"
+          + '  <div class="form-group">'
+          + "    <label>Enter the file name to be changed.</label>"
+          + '    <input class="form-control ft-modal-dest-filename" placeholder="Enter text" value="' + filename + '" autofocus="autofocus">'
+          + "  </div>"
+          + "</div>"
+          ;
+
         context  = {
           title:        "Rename " + fileType + "?",
-          body:         'Are you sure you want to rename <span class="ft-modal-filename">' + filename + '</span> from your ' + CONFIG.site_name_short + '?',
+          body:         bodyHtml,
           button_label: "Rename",
           button_class: "ft-button-rename"
         };
@@ -38,6 +47,12 @@
       $("#ft-modal-confirm").remove();
       $(".ft-modal").html(html);
       $("#ft-modal-confirm").modal("show");
+
+      var dotIdx = filename.lastIndexOf(".");
+      $(".ft-modal-dest-filename")[0].setSelectionRange(0, dotIdx);
+
+      // FIXME : doesn't work now
+      //$(".ft-modal-dest-filename").focus();
     });
 
     $(document).on("click", ".ft-button-delete", function (e) {
