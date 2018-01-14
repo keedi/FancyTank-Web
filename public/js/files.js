@@ -5,13 +5,18 @@
       var action   = $(this).data("action");
       var $trFile  = $(this).closest("tr");
       var filename = $trFile.data("filename");
+      var isDir    = $trFile.data("is-directory");
       var source   = $("#ft-template").html();
       var template = Handlebars.compile(source);
+
+      var fileType = "File";
+      if ( isDir === true )
+        fileType = "Directory";
 
       var context;
       if (action === "delete") {
         context  = {
-          title:        "Delete folder?",
+          title:        "Delete " + fileType + "?",
           body:         'Are you sure you want to delete <span class="ft-modal-filename">' + filename + '</span> from your ' + CONFIG.site_name_short + '?',
           button_label: "Delete",
           button_class: "ft-button-delete"
@@ -19,7 +24,7 @@
       }
       else if (action === "rename") {
         context  = {
-          title:        "Rename folder?",
+          title:        "Rename " + fileType + "?",
           body:         'Are you sure you want to rename <span class="ft-modal-filename">' + filename + '</span> from your ' + CONFIG.site_name_short + '?',
           button_label: "Rename",
           button_class: "ft-button-rename"

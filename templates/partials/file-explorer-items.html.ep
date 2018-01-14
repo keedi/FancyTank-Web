@@ -3,6 +3,7 @@
       <tr
         data-api-url="<%= url_for("/api/files/$sub_uri") %>"
         data-filename="<%= $path->basename %>"
+        data-is-directory="<%= $path->is_dir ? "true" : "false" %>"
         >
         <td class="ft-table-cell" style="flex: 0 0 36px;">
         </td>
