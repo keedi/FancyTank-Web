@@ -43,7 +43,9 @@
                 <i class="fa fa-bars" style="display: block; margin: 3px;"></i>
               </button>
               <ul class="dropdown-menu">
-                <li><a href="#">Download</a></li>
+                % if ( $path->is_file ) {
+                  <li><a href="<%= url_for("/download/$sub_uri") %>">Download</a></li>
+                % }
                 <li><a href="#">Starred</a></li>
                 <li><a href="#">Rename</a></li>
                 <li><a href="#" class="ft-button-popup" data-target="#ft-modal-confirm" data-toggle="modal" data-filename="<%= $path->basename %>">Delete</a></li>
