@@ -1,9 +1,9 @@
 (function() {
   $(function() {
 
-    $(document).on("click", ".ft-button-popup", function () {
+    $(document).on("click", ".ft-button-popup", function (e) {
       var filename = $(this).data('filename');
-      var source   = $("#entry-template").html()
+      var source   = $("#ft-template").html();
       var template = Handlebars.compile(source);
       var context  = {
         title:        "Delete folder?",
@@ -12,11 +12,13 @@
         button_class: "ft-button-delete"
       };
       var html = template(context);
-      $(".ft-modal").html(html)
+
+      $("#ft-modal-confirm").remove();
+      $(".ft-modal").html(html);
       $("#ft-modal-confirm").modal("show");
     });
 
-    $(document).on("click", ".ft-button-delete", function () {
+    $(document).on("click", ".ft-button-delete", function (e) {
       var filename = $(".modal-body .ft-modal-filename").text();
       var trFile   = $(".ft-button-popup[data-filename='" + filename + "']").closest("tr");
       var apiUrl   = trFile.data("api-url");

@@ -61,7 +61,7 @@
           <div class="ft-modal">
           </div>
 
-          <script id="entry-template" type="text/x-handlebars-template">
+          <script id="ft-template" type="text/x-handlebars-template">
 	    <div aria-hidden="true" aria-labelledby="ft-modal-label-confirm" class="modal fade" id="ft-modal-confirm" role="dialog" tabindex="-1">
 	      <div class="modal-dialog">
 		<div class="modal-content">
