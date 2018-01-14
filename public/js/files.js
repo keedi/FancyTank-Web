@@ -14,6 +14,7 @@
         fileType = "Directory";
 
       var context;
+      var bodyHtml;
       if (action === "delete") {
         bodyHtml
           = '<div class="ft-modal-data" data-filename="' + filename + '">'
