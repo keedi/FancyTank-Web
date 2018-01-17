@@ -1,51 +1,76 @@
 (function() {
   $(function() {
 
-    var getInsertIdxNewDir = function(newDirname) {
-      var insertIdx = 0;
+    var getInsertIdxNew = function(newName, opt) {
       var idx = 0;
       $("tr.ft-table-row-file").each(function(index) {
-        var dirname = $(this).data("filename");
+        var name        = $(this).data("filename");
         var isDirectory = $(this).data("is-directory");
-        if (!isDirectory)
-          return;
 
-        if ( newDirname < dirname ) {
-          return false;
+        if ( opt.type === "dir" ) {
+          if (!isDirectory) {
+            ++idx;
+            return;
+          }
         }
-        else {
-          ++insertIdx;
+        else if ( opt.type === "file" ) {
+          if (isDirectory) {
+            ++idx;
+            return;
+          }
+        }
+
+        if ( newName < name ) {
+          return false;
         }
         ++idx;
       });
 
-      return insertIdx;
+      return idx;
     };
-    var insertNewDir = function(newDirname) {
+
+    var insertNew = function(newName, opt) {
       var urlFor  = $("body").data("url-for");
       var baseDir = $(".file-explorer").data("base-dir");
-      var subUrl  = baseDir + "/" + newDirname;
+      var remainUrl  = baseDir + "/" + newName;
 
-      var source   = $("#ft-template-create-dir").html();
+      var apiUrl;
+      var subUrl;
+      var downloadUrl;
+      var source;
+      if ( opt.type === "dir" ) {
+        apiUrl = urlFor + "api/files/" + remainUrl;
+        subUrl = urlFor + "files/" + remainUrl;
+        source = $("#ft-template-create-dir").html();
+      }
+      else if ( opt.type === "file" ) {
+        apiUrl      = urlFor + "api/files/" + remainUrl; // ???
+        subUrl      = urlFor + "preview/" + remainUrl;
+        downloadUrl = urlFor + "download/" + remainUrl;
+        source      = $("#ft-template-upload-file").html();
+      }
+
       var template = Handlebars.compile(source);
       var context = {
-        api_url:  urlFor + "api/files/" + subUrl,
-        sub_url:  urlFor + "files/" + subUrl,
-        filename: newDirname
+        api_url:      apiUrl,
+        sub_url:      subUrl,
+        download_url: downloadUrl,
+        filename:     newName
       };
       var html = template(context);
 
-      var insertIdx = getInsertIdxNewDir(newDirname);
+      var insertIdx = getInsertIdxNew(newName, opt);
+      var $tr = $("tr.ft-table-row-file");
+      if ( insertIdx < $tr.length )
+        $tr.eq(insertIdx).before(html);
+      else
+        $tr.eq(-1).after(html);
+
+      /**
       var idx = 0;
-      var $tr = $("tr.ft-table-row-file[data-is-directory=true]");
       var $elem;
       $tr.each(function(index) {
         $elem = $(this);
-
-        var dirname = $(this).data("filename");
-        var isDirectory = $(this).data("is-directory");
-        if (!isDirectory)
-          return;
 
         if ( idx === insertIdx ) {
           $(this).before(html)
@@ -55,6 +80,7 @@
       });
       if ( idx === $tr.length )
         $elem.after(html);
+      */
     };
 
     $(document).on("click", ".ft-button-popup-submenu", function (e) {
@@ -88,9 +114,9 @@
           = '<div class="ft-modal-data">'
           + '  <div class="form-group">'
           + '    <label>File input</label>'
-          + '    <input type="file">'
+          + '    <input type="file" name="upload_file">'
           + '  </div>'
-          + "</div>"
+          + '</div>'
           ;
 
         context = {
@@ -260,7 +286,47 @@
         url: apiUrl + "/" + newDir,
         type: "POST",
         success: function(result) {
-          insertNewDir(result.destDirname);
+          insertNew( result.destDirname, { type: "dir" } );
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          $(".ft-error-api-msg").text(jqXHR.responseJSON.message);
+          $(".ft-error-api").show(400, function() {
+            setTimeout(function() {
+              $(".ft-error-api").fadeOut(600);
+            }, 3000);
+          });
+        }
+      });
+
+      /**
+       * hide modal
+       */
+      $('#ft-modal-confirm').modal('hide');
+    });
+
+    $(document).on("click", ".ft-button-upload-file", function (e) {
+      var basename = $(".ft-modal-data input[type=file]").val().replace(/.*(\/|\\)/, '');
+      var apiUrl   = $(this).data("api-url");
+
+      // https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Sending_forms_through_JavaScript
+      // https://developer.mozilla.org/en-US/docs/Web/API/FormData/Using_FormData_Objects
+      // https://stackoverflow.com/a/8244082
+      // https://coderwall.com/p/p-n7eq/file-uploads-with-jquery-html5-and-formdata
+      var formData = new FormData();
+      formData.append( "upload_file", $("input[type=file]")[0].files[0] );
+
+      /**
+       * request to upload a file on server
+       * https://stackoverflow.com/a/25983643
+       */
+      $.ajax({
+        url: apiUrl + "/" + basename,
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(result) {
+          insertNew( result.destFilename, { type: "file" } );
         },
         error: function(jqXHR, textStatus, errorThrown) {
           $(".ft-error-api-msg").text(jqXHR.responseJSON.message);
