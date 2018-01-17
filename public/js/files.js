@@ -88,6 +88,37 @@
       //$(".ft-modal-dest-filename").focus();
     });
 
+    $(document).on("click", ".ft-button-popup-upload-file", function (e) {
+      var source   = $("#ft-template-modal").html();
+      var template = Handlebars.compile(source);
+      var apiUrl   = $(this).data("api-url");
+
+      var bodyHtml
+        = '<div class="ft-modal-data">'
+        + '  <div class="form-group">'
+        + '    <label>File input</label>'
+        + '    <input type="file">'
+        + '  </div>'
+        + "</div>"
+        ;
+
+      var context = {
+        title:        "Upload a new file?",
+        body:         bodyHtml,
+        button_label: "Upload",
+        button_class: "ft-button-upload-file",
+        api_url:      apiUrl
+      };
+      var html = template(context);
+
+      $("#ft-modal-confirm").remove();
+      $(".ft-modal").html(html);
+      $("#ft-modal-confirm").modal("show");
+
+      // FIXME : doesn't work now
+      //$(".ft-modal-dest-filename").focus();
+    });
+
     $(document).on("click", ".ft-button-popup", function (e) {
       var action   = $(this).data("action");
       var $trFile  = $(this).closest("tr");
