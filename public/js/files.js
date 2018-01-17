@@ -57,58 +57,53 @@
         $elem.after(html);
     };
 
-    $(document).on("click", ".ft-button-popup-create-dir", function (e) {
+    $(document).on("click", ".ft-button-popup-submenu", function (e) {
+      var action   = $(this).data("action");
       var source   = $("#ft-template-modal").html();
       var template = Handlebars.compile(source);
       var apiUrl   = $(this).data("api-url");
 
-      var bodyHtml
-        = '<div class="ft-modal-data">'
-        + '  <div class="form-group">'
-        + "    <label>Enter the folder name to be created.</label>"
-        + '    <input class="form-control ft-modal-dest-filename" placeholder="New folder" autofocus="autofocus">'
-        + "  </div>"
-        + "</div>"
-        ;
+      var context;
+      var bodyHtml;
+      if (action === "create-dir") {
+        bodyHtml
+          = '<div class="ft-modal-data">'
+          + '  <div class="form-group">'
+          + "    <label>Enter the folder name to be created.</label>"
+          + '    <input class="form-control ft-modal-dest-filename" placeholder="New folder" autofocus="autofocus">'
+          + "  </div>"
+          + "</div>"
+          ;
 
-      var context = {
-        title:        "Create a new folder?",
-        body:         bodyHtml,
-        button_label: "Create",
-        button_class: "ft-button-create-dir",
-        api_url:      apiUrl
-      };
-      var html = template(context);
+        context = {
+          title:        "Create a new folder?",
+          body:         bodyHtml,
+          button_label: "Create",
+          button_class: "ft-button-create-dir",
+          api_url:      apiUrl
+        };
+      }
+      else if (action === "upload-file") {
+        bodyHtml
+          = '<div class="ft-modal-data">'
+          + '  <div class="form-group">'
+          + '    <label>File input</label>'
+          + '    <input type="file">'
+          + '  </div>'
+          + "</div>"
+          ;
 
-      $("#ft-modal-confirm").remove();
-      $(".ft-modal").html(html);
-      $("#ft-modal-confirm").modal("show");
-
-      // FIXME : doesn't work now
-      //$(".ft-modal-dest-filename").focus();
-    });
-
-    $(document).on("click", ".ft-button-popup-upload-file", function (e) {
-      var source   = $("#ft-template-modal").html();
-      var template = Handlebars.compile(source);
-      var apiUrl   = $(this).data("api-url");
-
-      var bodyHtml
-        = '<div class="ft-modal-data">'
-        + '  <div class="form-group">'
-        + '    <label>File input</label>'
-        + '    <input type="file">'
-        + '  </div>'
-        + "</div>"
-        ;
-
-      var context = {
-        title:        "Upload a new file?",
-        body:         bodyHtml,
-        button_label: "Upload",
-        button_class: "ft-button-upload-file",
-        api_url:      apiUrl
-      };
+        context = {
+          title:        "Upload a new file?",
+          body:         bodyHtml,
+          button_label: "Upload",
+          button_class: "ft-button-upload-file",
+          api_url:      apiUrl
+        };
+      }
+      else {
+        return;
+      }
       var html = template(context);
 
       $("#ft-modal-confirm").remove();

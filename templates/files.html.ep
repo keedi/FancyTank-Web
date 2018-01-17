@@ -41,7 +41,7 @@
                         <i class="fa fa-plus fa-stack-0_9x fa-files-submenu-item-icon-plus-stacked"></i>
                       </span>
                     </div>
-                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> <a href="#" class="ft-button-popup-create-dir" data-api-url="<%= url_for("/api/dirs/$base_dir") %>"> New folder </a> </div>
+                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> <a href="#" class="ft-button-popup-submenu" data-action="create-dir" data-api-url="<%= url_for("/api/dirs/$base_dir") %>"> New folder </a> </div>
                   </li>
                   <li>
                     <div class="fa-files-submenu-item">
@@ -50,7 +50,7 @@
                         <i class="fa fa-plus fa-stack-0_9x fa-files-submenu-item-icon-plus-stacked"></i>
                       </span>
                     </div>
-                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> <a href="#" class="ft-button-popup-upload-file" data-api-url="<%= url_for("/api/uploads/$base_dir") %>"> Upload a file </a> </div>
+                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> <a href="#" class="ft-button-popup-submenu" data-action="upload-file" data-api-url="<%= url_for("/api/uploads/$base_dir") %>"> Upload a file </a> </div>
                   </li>
                 </ul>
               </div>
