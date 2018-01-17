@@ -57,6 +57,10 @@
     margin-left: 5px;
 }
 
+.fa-files-submenu-item-name a:hover {
+    text-decoration: none;
+}
+
 /**
  * preview a file
  */
