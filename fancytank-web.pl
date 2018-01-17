@@ -4,6 +4,8 @@ use utf8;
 
 use Mojolicious::Lite;
 
+use Mojo::Util;
+
 use DateTime;
 use Email::Valid;
 use File::stat;
@@ -124,11 +126,12 @@ helper sorted_dirs_files => sub {
     my @dirs;
     my @files;
     while ( my $path = $iter->() ) {
-        if ( $path->is_dir ) {
-            push @dirs, $path;
+        my $encoded_path = path( Mojo::Util::decode("UTF-8", $path) );
+        if ( $encoded_path->is_dir ) {
+            push @dirs, $encoded_path;
         }
         else {
-            push @files, $path;
+            push @files, $encoded_path;
         }
     }
     my @sorted_dirs  = sort @dirs;
