@@ -50,7 +50,7 @@
                         <i class="fa fa-plus fa-stack-0_9x fa-files-submenu-item-icon-plus-stacked"></i>
                       </span>
                     </div>
-                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> <a href="#">Upload a file</a> </div>
+                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> <a href="#" class="ft-button-popup-upload-file" data-api-url="<%= url_for("/api/uploads/$base_dir") %>"> Upload a file </a> </div>
                   </li>
                 </ul>
               </div>
