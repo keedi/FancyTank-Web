@@ -1,6 +1,35 @@
 (function() {
   $(function() {
 
+    $(document).on("click", ".ft-button-popup-create-dir", function (e) {
+      var source   = $("#ft-template").html();
+      var template = Handlebars.compile(source);
+
+      var bodyHtml
+        = '<div class="ft-modal-data">'
+        + '  <div class="form-group">'
+        + "    <label>Enter the folder name to be created.</label>"
+        + '    <input class="form-control ft-modal-dest-filename" placeholder="New folder" autofocus="autofocus">'
+        + "  </div>"
+        + "</div>"
+        ;
+
+      var context = {
+        title:        "Create a new folder?",
+        body:         bodyHtml,
+        button_label: "Create",
+        button_class: "ft-button-create-dir"
+      };
+      var html = template(context);
+
+      $("#ft-modal-confirm").remove();
+      $(".ft-modal").html(html);
+      $("#ft-modal-confirm").modal("show");
+
+      // FIXME : doesn't work now
+      //$(".ft-modal-dest-filename").focus();
+    });
+
     $(document).on("click", ".ft-button-popup", function (e) {
       var action   = $(this).data("action");
       var $trFile  = $(this).closest("tr");
