@@ -617,10 +617,10 @@ del '/api/files/*file/delete' => sub {
         $c->render(
             status => $error_code,
             json   => {
-                Message   => $error_msg,
-                ErrorCode => $error_code,
-                Created   => DateTime->now( time_zone => $cu->time_zone ),
-                Request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+                message   => $error_msg,
+                errorCode => $error_code,
+                created   => DateTime->now( time_zone => $cu->time_zone ),
+                request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
             },
         );
         return;
@@ -630,9 +630,9 @@ del '/api/files/*file/delete' => sub {
 
     $c->render(
         json   => {
-            Message => "Success",
-            Created => DateTime->now( time_zone => $cu->time_zone ),
-            Request => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+            message => "Success",
+            created => DateTime->now( time_zone => $cu->time_zone ),
+            request => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
         },
     );
 };
@@ -653,10 +653,10 @@ put '/api/files/*file/rename' => sub {
         $c->render(
             status => $error_code,
             json   => {
-                Message   => $error_msg,
-                ErrorCode => $error_code,
-                Created   => DateTime->now( time_zone => $cu->time_zone ),
-                Request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+                message   => $error_msg,
+                errorCode => $error_code,
+                created   => DateTime->now( time_zone => $cu->time_zone ),
+                request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
             },
         );
         return;
@@ -681,10 +681,10 @@ put '/api/files/*file/rename' => sub {
             $c->render(
                 status => $error_code,
                 json   => {
-                    Message   => $error_msg,
-                    ErrorCode => $error_code,
-                    Created   => DateTime->now( time_zone => $cu->time_zone ),
-                    Request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+                    message   => $error_msg,
+                    errorCode => $error_code,
+                    created   => DateTime->now( time_zone => $cu->time_zone ),
+                    request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
                 },
             );
             return;
@@ -697,10 +697,10 @@ put '/api/files/*file/rename' => sub {
             $c->render(
                 status => $error_code,
                 json   => {
-                    Message   => $error_msg,
-                    ErrorCode => $error_code,
-                    Created   => DateTime->now( time_zone => $cu->time_zone ),
-                    Request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+                    message   => $error_msg,
+                    errorCode => $error_code,
+                    created   => DateTime->now( time_zone => $cu->time_zone ),
+                    request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
                 },
             );
             return;
