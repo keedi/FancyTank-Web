@@ -41,7 +41,7 @@
                         <i class="fa fa-plus fa-stack-0_9x fa-files-submenu-item-icon-plus-stacked"></i>
                       </span>
                     </div>
-                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> <a href="#" class="ft-button-popup-create-dir"> New folder </a> </div>
+                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> <a href="#" class="ft-button-popup-create-dir" data-api-url="<%= url_for("/api/dirs/$base_dir") %>"> New folder </a> </div>
                   </li>
                   <li>
                     <div class="fa-files-submenu-item">
@@ -75,7 +75,7 @@
                     {{{body}}}
                   </div>
                   <div class="modal-footer">
-                    <button class="btn btn-primary {{button_class}}" type="button">{{button_label}}</button>
+                    <button class="btn btn-primary {{button_class}}" type="button" {{#if api_url}}data-api-url="{{api_url}}"{{/if}}>{{button_label}}</button>
                     <button class="btn btn-default" data-dismiss="modal" type="button">Cancel</button>
                   </div>
                 </div><!-- /.modal-content -->

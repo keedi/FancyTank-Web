@@ -4,6 +4,7 @@
     $(document).on("click", ".ft-button-popup-create-dir", function (e) {
       var source   = $("#ft-template").html();
       var template = Handlebars.compile(source);
+      var apiUrl   = $(this).data("api-url");
 
       var bodyHtml
         = '<div class="ft-modal-data">'
@@ -18,7 +19,8 @@
         title:        "Create a new folder?",
         body:         bodyHtml,
         button_label: "Create",
-        button_class: "ft-button-create-dir"
+        button_class: "ft-button-create-dir",
+        api_url:      apiUrl
       };
       var html = template(context);
 
@@ -148,6 +150,35 @@
             // remove
             $trFile.remove();
           }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          $(".ft-error-api-msg").text(jqXHR.responseJSON.message);
+          $(".ft-error-api").show(400, function() {
+            setTimeout(function() {
+              $(".ft-error-api").fadeOut(600);
+            }, 3000);
+          });
+        }
+      });
+
+      /**
+       * hide modal
+       */
+      $('#ft-modal-confirm').modal('hide');
+    });
+
+    $(document).on("click", ".ft-button-create-dir", function (e) {
+      var newDir = $(".ft-modal-dest-filename").val();
+      var apiUrl = $(this).data("api-url");
+
+      /**
+       * request to delete file on server
+       */
+      $.ajax({
+        url: apiUrl + "/" + newDir,
+        type: "POST",
+        success: function(result) {
+          // create a new node
         },
         error: function(jqXHR, textStatus, errorThrown) {
           $(".ft-error-api-msg").text(jqXHR.responseJSON.message);
