@@ -1,8 +1,64 @@
 (function() {
   $(function() {
 
+    var getInsertIdxNewDir = function(newDirname) {
+      var insertIdx = 0;
+      var idx = 0;
+      $("tr.ft-table-row-file").each(function(index) {
+        var dirname = $(this).data("filename");
+        var isDirectory = $(this).data("is-directory");
+        if (!isDirectory)
+          return;
+
+        if ( newDirname < dirname ) {
+          return false;
+        }
+        else {
+          ++insertIdx;
+        }
+        ++idx;
+      });
+
+      return insertIdx;
+    };
+    var insertNewDir = function(newDirname) {
+      var urlFor  = $("body").data("url-for");
+      var baseDir = $(".file-explorer").data("base-dir");
+      var subUrl  = baseDir + "/" + newDirname;
+
+      var source   = $("#ft-template-create-dir").html();
+      var template = Handlebars.compile(source);
+      var context = {
+        api_url:  urlFor + "/api/files/" + subUrl,
+        sub_url:  urlFor + "/files/" + subUrl,
+        filename: newDirname
+      };
+      var html = template(context);
+
+      var insertIdx = getInsertIdxNewDir(newDirname);
+      var idx = 0;
+      var $tr = $("tr.ft-table-row-file[data-is-directory=true]");
+      var $elem;
+      $tr.each(function(index) {
+        $elem = $(this);
+
+        var dirname = $(this).data("filename");
+        var isDirectory = $(this).data("is-directory");
+        if (!isDirectory)
+          return;
+
+        if ( idx === insertIdx ) {
+          $(this).before(html)
+          return false;
+        }
+        ++idx;
+      });
+      if ( idx === $tr.length )
+        $elem.after(html);
+    };
+
     $(document).on("click", ".ft-button-popup-create-dir", function (e) {
-      var source   = $("#ft-template").html();
+      var source   = $("#ft-template-modal").html();
       var template = Handlebars.compile(source);
       var apiUrl   = $(this).data("api-url");
 
@@ -37,7 +93,7 @@
       var $trFile  = $(this).closest("tr");
       var filename = $trFile.data("filename");
       var isDir    = $trFile.data("is-directory");
-      var source   = $("#ft-template").html();
+      var source   = $("#ft-template-modal").html();
       var template = Handlebars.compile(source);
 
       var fileType = "File";
@@ -178,7 +234,7 @@
         url: apiUrl + "/" + newDir,
         type: "POST",
         success: function(result) {
-          // create a new node
+          insertNewDir(result.destDirname);
         },
         error: function(jqXHR, textStatus, errorThrown) {
           $(".ft-error-api-msg").text(jqXHR.responseJSON.message);

@@ -1,4 +1,4 @@
-<table class="table">
+<table class="table file-explorer" data-base-dir="<%= $base_dir %>">
   <thead>
     <tr>
       <th>
