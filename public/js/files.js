@@ -29,8 +29,8 @@
       var source   = $("#ft-template-create-dir").html();
       var template = Handlebars.compile(source);
       var context = {
-        api_url:  urlFor + "/api/files/" + subUrl,
-        sub_url:  urlFor + "/files/" + subUrl,
+        api_url:  urlFor + "api/files/" + subUrl,
+        sub_url:  urlFor + "files/" + subUrl,
         filename: newDirname
       };
       var html = template(context);
