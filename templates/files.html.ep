@@ -27,9 +27,9 @@
             </ol>
           </div>
 
-          <div class="row">
+          <div class="row" class="file-explorer">
             <div class="col-md-9">
-              %= include "partials/file-explorer"
+              %= include "partials/file-explorer", base_dir => $base_dir
             </div>
             <div class="col-md-3 hidden-sm hidden-xs">
               <div class="ft-files-submenu">
@@ -41,7 +41,7 @@
                         <i class="fa fa-plus fa-stack-0_9x fa-files-submenu-item-icon-plus-stacked"></i>
                       </span>
                     </div>
-                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> Create a folder </div>
+                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> <a href="#" class="ft-button-popup-create-dir" data-api-url="<%= url_for("/api/dirs/$base_dir") %>"> New folder </a> </div>
                   </li>
                   <li>
                     <div class="fa-files-submenu-item">
@@ -50,7 +50,7 @@
                         <i class="fa fa-plus fa-stack-0_9x fa-files-submenu-item-icon-plus-stacked"></i>
                       </span>
                     </div>
-                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> Upload a file </div>
+                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> <a href="#">Upload a file</a> </div>
                   </li>
                 </ul>
               </div>
@@ -61,24 +61,69 @@
           <div class="ft-modal">
           </div>
 
-          <script id="ft-template" type="text/x-handlebars-template">
-	    <div aria-hidden="true" aria-labelledby="ft-modal-label-confirm" class="modal fade" id="ft-modal-confirm" role="dialog" tabindex="-1">
-	      <div class="modal-dialog">
-		<div class="modal-content">
-		  <div class="modal-header">
-		    <button aria-hidden="true" class="close" data-dismiss="modal" type="button">×</button>
-		    <h4 class="modal-title" id="ft-modal-label-confirm">
-		      {{title}}
-		    </h4>
-		  </div>
-		  <div class="modal-body">
-		    {{{body}}}
-		  </div>
-		  <div class="modal-footer">
-		    <button class="btn btn-primary {{button_class}}" type="button">{{button_label}}</button>
-		    <button class="btn btn-default" data-dismiss="modal" type="button">Cancel</button>
-		  </div>
-		</div><!-- /.modal-content -->
-	      </div><!-- /.modal-dialog -->
-	    </div><!-- /.modal -->
-	  </script>
+          <script id="ft-template-modal" type="text/x-handlebars-template">
+            <div aria-hidden="true" aria-labelledby="ft-modal-label-confirm" class="modal fade" id="ft-modal-confirm" role="dialog" tabindex="-1">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button aria-hidden="true" class="close" data-dismiss="modal" type="button">×</button>
+                    <h4 class="modal-title" id="ft-modal-label-confirm">
+                      {{title}}
+                    </h4>
+                  </div>
+                  <div class="modal-body">
+                    {{{body}}}
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-primary {{button_class}}" type="button" {{#if api_url}}data-api-url="{{api_url}}"{{/if}}>{{button_label}}</button>
+                    <button class="btn btn-default" data-dismiss="modal" type="button">Cancel</button>
+                  </div>
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+          </script>
+
+          <script id="ft-template-create-dir" type="text/x-handlebars-template">
+            <tr
+              class="ft-table-row-file"
+              data-api-url="{{api_url}}"
+              data-filename="{{filename}}"
+              data-is-directory="true"
+              >
+              <td class="ft-table-cell" style="flex: 0 0 36px;">
+              </td>
+              <td class="ft-table-cell" style="flex: 1 1 50%;">
+                <div class="vertical-align full-height">
+                  <div>
+                    <div class="ft-media-cell-icon ft-color-folder">
+                      <i class="fa fa-folder"></i>
+                    </div>
+                    <div class="ft-media-cell-filename">
+                      <a href="{{sub_url}}">
+                        <span>{{filename}}</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="ft-table-cell" style="flex: 0 0 35%;">
+                <div class="vertical-align full-height">
+                  <span aria-hidden="true">--</span>
+                </div>
+              </td>
+              <td class="ft-table-cell" style="flex: 0 0 15%;">
+                <div class="vertical-align full-height">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fa fa-bars" style="display: block; margin: 3px;"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a href="#">Starred</a></li>
+                      <li><a href="#" class="ft-button-popup" data-action="rename">Rename</a></li>
+                      <li><a href="#" class="ft-button-popup" data-action="delete">Delete</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </script>

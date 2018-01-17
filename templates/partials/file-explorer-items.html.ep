@@ -1,8 +1,8 @@
     % for my $path (@$items) {
-      % my $sub_uri = ( $base_dir ? "$base_dir/" : q{} ) . $path->basename;
+      % my $sub_url = ( $base_dir ? "$base_dir/" : q{} ) . $path->basename;
       <tr
         class="ft-table-row-file"
-        data-api-url="<%= url_for("/api/files/$sub_uri") %>"
+        data-api-url="<%= url_for("/api/files/$sub_url") %>"
         data-filename="<%= $path->basename %>"
         data-is-directory="<%= $path->is_dir ? "true" : "false" %>"
         >
@@ -23,12 +23,12 @@
               % }
               <div class="ft-media-cell-filename">
                 % if ( $path->is_dir ) {
-                  <a href="<%= url_for("/files/$sub_uri") %>">
+                  <a href="<%= url_for("/files/$sub_url") %>">
                     <span><%= $path->basename %></span>
                   </a>
                 % }
                 % else {
-                  <a href="<%= url_for("/preview/$sub_uri") %>">
+                  <a href="<%= url_for("/preview/$sub_url") %>">
                     <span><%= $path->basename %></span>
                   </a>
                 % }
@@ -49,7 +49,7 @@
               </button>
               <ul class="dropdown-menu">
                 % if ( $path->is_file ) {
-                  <li><a href="<%= url_for("/download/$sub_uri") %>">Download</a></li>
+                  <li><a href="<%= url_for("/download/$sub_url") %>">Download</a></li>
                 % }
                 <li><a href="#">Starred</a></li>
                 <li><a href="#" class="ft-button-popup" data-action="rename">Rename</a></li>

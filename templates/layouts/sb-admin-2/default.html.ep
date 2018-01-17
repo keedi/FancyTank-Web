@@ -49,7 +49,7 @@
 
 </head>
 
-<body>
+<body data-url-for="<%= url_for("/") %>">
     <div id="wrapper">
 
         <!-- Navigation -->

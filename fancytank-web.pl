@@ -184,6 +184,10 @@ helper get_req_file => sub {
 
 helper get_req_path => sub {
     my ( $c, $base_dir, $remain_path ) = @_;
+    my %opts = (
+        check_exists => 1,
+        %{ $_[3] || +{} },
+    );
 
     unless ( $base_dir ) {
         $c->app->log->warn("base_dir is needed");
@@ -196,9 +200,11 @@ helper get_req_path => sub {
     }
 
     my $current_file = path($base_dir)->child($remain_path);
-    unless ( $current_file->exists ) {
-        $c->app->log->warn("req_file must be existed: [$current_file]");
-        return;
+    if ( $opts{check_exists} ) {
+        unless ( $current_file->exists ) {
+            $c->app->log->warn("req_file must be existed: [$current_file]");
+            return;
+        }
     }
 
     return $current_file;
@@ -617,10 +623,10 @@ del '/api/files/*file/delete' => sub {
         $c->render(
             status => $error_code,
             json   => {
-                Message   => $error_msg,
-                ErrorCode => $error_code,
-                Created   => DateTime->now( time_zone => $cu->time_zone ),
-                Request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+                message   => $error_msg,
+                errorCode => $error_code,
+                created   => DateTime->now( time_zone => $cu->time_zone ),
+                request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
             },
         );
         return;
@@ -630,9 +636,9 @@ del '/api/files/*file/delete' => sub {
 
     $c->render(
         json   => {
-            Message => "Success",
-            Created => DateTime->now( time_zone => $cu->time_zone ),
-            Request => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+            message => "Success",
+            created => DateTime->now( time_zone => $cu->time_zone ),
+            request => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
         },
     );
 };
@@ -653,10 +659,10 @@ put '/api/files/*file/rename' => sub {
         $c->render(
             status => $error_code,
             json   => {
-                Message   => $error_msg,
-                ErrorCode => $error_code,
-                Created   => DateTime->now( time_zone => $cu->time_zone ),
-                Request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+                message   => $error_msg,
+                errorCode => $error_code,
+                created   => DateTime->now( time_zone => $cu->time_zone ),
+                request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
             },
         );
         return;
@@ -681,10 +687,10 @@ put '/api/files/*file/rename' => sub {
             $c->render(
                 status => $error_code,
                 json   => {
-                    Message   => $error_msg,
-                    ErrorCode => $error_code,
-                    Created   => DateTime->now( time_zone => $cu->time_zone ),
-                    Request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+                    message   => $error_msg,
+                    errorCode => $error_code,
+                    created   => DateTime->now( time_zone => $cu->time_zone ),
+                    request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
                 },
             );
             return;
@@ -697,10 +703,10 @@ put '/api/files/*file/rename' => sub {
             $c->render(
                 status => $error_code,
                 json   => {
-                    Message   => $error_msg,
-                    ErrorCode => $error_code,
-                    Created   => DateTime->now( time_zone => $cu->time_zone ),
-                    Request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+                    message   => $error_msg,
+                    errorCode => $error_code,
+                    created   => DateTime->now( time_zone => $cu->time_zone ),
+                    request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
                 },
             );
             return;
@@ -727,6 +733,86 @@ put '/api/files/*file/rename' => sub {
             destFilename => $dest->basename,
             created      => DateTime->now( time_zone => $cu->time_zone ),
             request      => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+        },
+    );
+};
+
+post '/api/dirs/*dir' => sub {
+    my $c = shift;
+
+    my $cu  = $c->stash("cu");
+    my $dir = $c->param("dir");
+
+    $c->app->log->debug( sprintf( "%s: api.create.dir: [%s]", $cu->email, $dir, ) );
+
+    my $validation = $c->validation;
+    # http://mojolicious.org/perldoc/Mojolicious/Validator/Validation#input
+    $validation->input({ dir => $dir });
+    return $c->render unless $validation->has_data;
+
+    # deny: \ / : ? * " |
+    $validation->required("dir")->size(1, 128)->like(qr{[^\\/:?*"|]+});
+
+    if ( $validation->has_error ) {
+        my $error_code = 400;
+        my $error_msg  = "Invalid parameters: " . join( ", ", @{ $validation->failed } );
+        $c->app->log->warn($error_msg);
+        $c->render(
+            status => $error_code,
+            json   => {
+                message   => $error_msg,
+                errorCode => $error_code,
+                created   => DateTime->now( time_zone => $cu->time_zone ),
+                request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+            },
+        );
+        return;
+    }
+
+    my $current_dir = $c->get_req_path( $cu->home_dir, $dir, { check_exists => 0 } );
+    unless ($current_dir) {
+        my $error_code = 400;
+        my $error_msg  = "The requested resource is not valid";
+        $c->app->log->warn($error_msg);
+        $c->render(
+            status => $error_code,
+            json   => {
+                message   => $error_msg,
+                errorCode => $error_code,
+                created   => DateTime->now( time_zone => $cu->time_zone ),
+                request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+            },
+        );
+        return;
+    }
+    if ( $current_dir->exists ) {
+        my $error_code = 400;
+        my $error_msg  = "The requested resource is already existed";
+        $c->app->log->warn($error_msg);
+        $c->render(
+            status => $error_code,
+            json   => {
+                message   => $error_msg,
+                errorCode => $error_code,
+                created   => DateTime->now( time_zone => $cu->time_zone ),
+                request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+            },
+        );
+        return;
+    }
+
+    # create path
+    $current_dir->mkpath;
+    if ( $current_dir->is_dir ) {
+        $c->app->log->info( sprintf( "%s: created dir: [%s]", $cu->email, $current_dir ) );
+    }
+
+    $c->render(
+        json   => {
+            message     => "Success",
+            destDirname => $current_dir->basename,
+            created     => DateTime->now( time_zone => $cu->time_zone ),
+            request     => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
         },
     );
 };
