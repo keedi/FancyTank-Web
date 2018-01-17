@@ -817,4 +817,94 @@ post '/api/dirs/*dir' => sub {
     );
 };
 
+post '/api/files/*file' => sub {
+    my $c = shift;
+
+    my $cu          = $c->stash("cu");
+    my $file        = $c->param("file");
+    my $upload_file = $c->param("upload_file");
+
+    $c->app->log->debug( sprintf( "%s: api.create.file [%s]", $cu->email, $file ) );
+
+    # Check file size
+    if ( $c->req->is_limit_exceeded ) {
+        my $error_code = 400;
+        my $error_msg  = "File is too big.";
+        $c->app->log->warn($error_msg);
+        $c->render(
+            status => $error_code,
+            json   => {
+                message   => $error_msg,
+                errorCode => $error_code,
+                created   => DateTime->now( time_zone => $cu->time_zone ),
+                request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+            },
+        );
+        return;
+    }
+
+    my $current_file = $c->get_req_path( $cu->home_dir, $file, { check_exists => 0 } );
+    unless ($current_file) {
+        my $error_code = 400;
+        my $error_msg  = "The requested resource is not valid";
+        $c->app->log->warn($error_msg);
+        $c->render(
+            status => $error_code,
+            json   => {
+                message   => $error_msg,
+                errorCode => $error_code,
+                created   => DateTime->now( time_zone => $cu->time_zone ),
+                request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+            },
+        );
+        return;
+    }
+    if ( $current_file->exists ) {
+        my $error_code = 400;
+        my $error_msg  = "The requested resource is already existed";
+        $c->app->log->warn($error_msg);
+        $c->render(
+            status => $error_code,
+            json   => {
+                message   => $error_msg,
+                errorCode => $error_code,
+                created   => DateTime->now( time_zone => $cu->time_zone ),
+                request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+            },
+        );
+        return;
+    }
+
+    # copy uploaded file
+    my $ret = $upload_file->move_to("$current_file");
+    unless ($ret) {
+        my $error_code = 500;
+        my $error_msg  = "Failed to copy uploaded file";
+        $c->app->log->warn($error_msg);
+        $c->render(
+            status => $error_code,
+            json   => {
+                message   => $error_msg,
+                errorCode => $error_code,
+                created   => DateTime->now( time_zone => $cu->time_zone ),
+                request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+            },
+        );
+        return;
+    }
+
+    if ( $current_file->exists ) {
+        $c->app->log->info( sprintf( "%s: created file: [%s] %d bytes", $cu->email, $current_file, $upload_file->size ) );
+    }
+
+    $c->render(
+        json => {
+            message      => "Success",
+            destFilename => $current_file->basename,
+            created      => DateTime->now( time_zone => $cu->time_zone ),
+            request => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+        },
+    );
+};
+
 app->start;
