@@ -41,7 +41,7 @@
                         <i class="fa fa-plus fa-stack-0_9x fa-files-submenu-item-icon-plus-stacked"></i>
                       </span>
                     </div>
-                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> <a href="#" class="ft-button-popup-create-dir" data-api-url="<%= url_for("/api/dirs/$base_dir") %>"> New folder </a> </div>
+                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> <a href="#" class="ft-button-popup-submenu" data-action="create-dir" data-api-url="<%= url_for("/api/dirs/$base_dir") %>"> New folder </a> </div>
                   </li>
                   <li>
                     <div class="fa-files-submenu-item">
@@ -50,7 +50,7 @@
                         <i class="fa fa-plus fa-stack-0_9x fa-files-submenu-item-icon-plus-stacked"></i>
                       </span>
                     </div>
-                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> <a href="#">Upload a file</a> </div>
+                    <div class="fa-files-submenu-item fa-files-submenu-item-name"> <a href="#" class="ft-button-popup-submenu" data-action="upload-file" data-api-url="<%= url_for("/api/files/$base_dir") %>"> Upload a file </a> </div>
                   </li>
                 </ul>
               </div>
@@ -118,6 +118,52 @@
                       <i class="fa fa-bars" style="display: block; margin: 3px;"></i>
                     </button>
                     <ul class="dropdown-menu">
+                      <li><a href="#">Starred</a></li>
+                      <li><a href="#" class="ft-button-popup" data-action="rename">Rename</a></li>
+                      <li><a href="#" class="ft-button-popup" data-action="delete">Delete</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </script>
+
+          <script id="ft-template-upload-file" type="text/x-handlebars-template">
+            <tr
+              class="ft-table-row-file"
+              data-api-url="{{api_url}}"
+              data-filename="{{filename}}"
+              data-is-directory="false"
+              >
+              <td class="ft-table-cell" style="flex: 0 0 36px;">
+              </td>
+              <td class="ft-table-cell" style="flex: 1 1 50%;">
+                <div class="vertical-align full-height">
+                  <div>
+                    <div class="ft-media-cell-icon ft-color-file">
+                      <i class="fa fa-file"></i>
+                    </div>
+                    <div class="ft-media-cell-filename">
+                      <a href="{{sub_url}}">
+                        <span>{{filename}}</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="ft-table-cell" style="flex: 0 0 35%;">
+                <div class="vertical-align full-height">
+                  <span aria-hidden="true">--</span>
+                </div>
+              </td>
+              <td class="ft-table-cell" style="flex: 0 0 15%;">
+                <div class="vertical-align full-height">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fa fa-bars" style="display: block; margin: 3px;"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a href="{{#if download_url}}{{download_url}}{{/if}}">Download</a></li>
                       <li><a href="#">Starred</a></li>
                       <li><a href="#" class="ft-button-popup" data-action="rename">Rename</a></li>
                       <li><a href="#" class="ft-button-popup" data-action="delete">Delete</a></li>
