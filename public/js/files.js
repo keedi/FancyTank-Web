@@ -243,7 +243,7 @@
       var apiUrl       = $trFile.data("api-url");
 
       /**
-       * request to delete file on server
+       * request to rename file on server
        */
       $.ajax({
         url: apiUrl + "/rename",
@@ -280,7 +280,21 @@
       var apiUrl = $(this).data("api-url");
 
       /**
-       * request to delete file on server
+       * check request new directory is valid or not
+       */
+      if ( newDir.match(/[\\/:?*"|]/) ) {
+        $(".ft-error-api-msg").text('Following characters are not allowed: \\ / : ? * " |');
+        $(".ft-error-api").show(400, function() {
+          setTimeout(function() {
+            $(".ft-error-api").fadeOut(600);
+          }, 3000);
+        });
+        $('#ft-modal-confirm').modal('hide');
+        return;
+      }
+
+      /**
+       * request to create dir on server
        */
       $.ajax({
         url: apiUrl + "/" + newDir,
