@@ -64,22 +64,6 @@
         $tr.eq(insertIdx).before(html);
       else
         $tr.eq(-1).after(html);
-
-      /**
-      var idx = 0;
-      var $elem;
-      $tr.each(function(index) {
-        $elem = $(this);
-
-        if ( idx === insertIdx ) {
-          $(this).before(html)
-          return false;
-        }
-        ++idx;
-      });
-      if ( idx === $tr.length )
-        $elem.after(html);
-      */
     };
 
     $(document).on("click", ".ft-button-popup-submenu", function (e) {
