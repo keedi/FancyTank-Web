@@ -9,8 +9,7 @@
 
         if ( opt.type === "dir" ) {
           if (!isDirectory) {
-            ++idx;
-            return;
+            return false;
           }
         }
         else if ( opt.type === "file" ) {
