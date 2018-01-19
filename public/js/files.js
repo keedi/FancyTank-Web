@@ -31,7 +31,7 @@
     var insertNew = function(newName, opt) {
       var urlFor  = $("body").data("url-for");
       var baseDir = $(".file-explorer").data("base-dir");
-      var remainUrl  = baseDir + "/" + newName;
+      var remainUrl  = ( baseDir ? baseDir + "/" : "" ) + newName;
 
       var apiUrl;
       var subUrl;
