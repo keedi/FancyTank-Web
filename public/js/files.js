@@ -60,7 +60,9 @@
 
       var insertIdx = getInsertIdxNew(newName, opt);
       var $tr = $("tr.ft-table-row-file");
-      if ( insertIdx < $tr.length )
+      if ( $tr.length <= 0 )
+        $('.file-explorer tbody').append(html);
+      else if ( insertIdx < $tr.length )
         $tr.eq(insertIdx).before(html);
       else
         $tr.eq(-1).after(html);
