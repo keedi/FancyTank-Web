@@ -126,7 +126,7 @@ helper sorted_dirs_files => sub {
     my @dirs;
     my @files;
     while ( my $path = $iter->() ) {
-        my $encoded_path = path( Mojo::Util::decode("UTF-8", $path) );
+        my $encoded_path = $current_dir->child( Mojo::Util::decode("UTF-8", $path->basename) );
         if ( $encoded_path->is_dir ) {
             push @dirs, $encoded_path;
         }
