@@ -995,7 +995,7 @@ get '/api/app/files' => sub {
 get '/api/app/files/*dir' => sub {
     my $c = shift;
 
-    my $cu  = $c->app->rs("User")->find({ id => 46 });
+    my $cu  = $c->app->rs("User")->find({ id => $c->app->config->{test}{user_id} });
     my $dir = $c->param("dir");
 
     $c->app->log->debug( sprintf( "%s: opening dir: [%s]", $cu->email, $dir ) );
