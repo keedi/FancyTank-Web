@@ -224,6 +224,7 @@ under sub {
 
     return 1 if $c->req->url->path->to_abs_string eq "/login";
     return 1 if $c->req->url->path->to_abs_string eq "/register";
+    return 1 if $c->req->url->path->to_abs_string =~ m{^/api/app/};
 
     $c->app->log->warn("only valid logged-in user can access");
     $c->redirect_to("/login");
@@ -908,6 +909,116 @@ post '/api/files/*file' => sub {
             request => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
         },
     );
+};
+
+get '/api/app/files' => sub {
+    my $c = shift;
+
+    my $cu  = $c->app->rs("User")->find({ id => $c->app->config->{test}{user_id} });
+    my $dir = q{};
+
+    $c->app->log->debug( sprintf( "%s: opening dir: [%s]", $cu->email, $dir ) );
+
+    my $current_dir = $c->get_req_dir( $cu->home_dir, $dir );
+    unless ($current_dir) {
+        my $error_code = 404;
+        my $error_msg  = "Not found";
+        $c->app->log->warn($error_msg);
+        $c->render(
+            status => $error_code,
+            json   => {
+                message   => $error_msg,
+                errorCode => $error_code,
+                created   => DateTime->now( time_zone => $cu->time_zone ),
+                request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+            },
+        );
+        return;
+    }
+    my ( $dirs, $files ) = $c->sorted_dirs_files($current_dir);
+
+    my @result;
+    for my $p ( @$dirs, @$files ) {
+        my $file_stat = stat($p);
+        my $mtime = DateTime->from_epoch(
+            epoch     => $file_stat->mtime,
+            time_zone => $cu->time_zone,
+        );
+        my $description = sprintf( '%s %s', $mtime->ymd, $mtime->hms );
+        push(
+            @result,
+            {
+                name        => $p->basename,
+                description => $description,
+                isType      => ( $p->is_dir ? "dir" : "file" ),
+            },
+        );
+    }
+
+    $c->render(
+        json => {
+            message     => "Success",
+            files       => \@result,
+            dirBasename => q{},
+            created     => DateTime->now( time_zone => $cu->time_zone ),
+            request     => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+        },
+    )
+};
+
+get '/api/app/files/*dir' => sub {
+    my $c = shift;
+
+    my $cu  = $c->app->rs("User")->find({ id => 46 });
+    my $dir = $c->param("dir");
+
+    $c->app->log->debug( sprintf( "%s: opening dir: [%s]", $cu->email, $dir ) );
+
+    my $current_dir = $c->get_req_dir( $cu->home_dir, $dir );
+    unless ($current_dir) {
+        my $error_code = 404;
+        my $error_msg  = "Not found";
+        $c->app->log->warn($error_msg);
+        $c->render(
+            status => $error_code,
+            json   => {
+                message   => $error_msg,
+                errorCode => $error_code,
+                created   => DateTime->now( time_zone => $cu->time_zone ),
+                request   => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+            },
+        );
+        return;
+    }
+    my ( $dirs, $files ) = $c->sorted_dirs_files($current_dir);
+
+    my @result;
+    for my $p ( @$dirs, @$files ) {
+        my $file_stat = stat($p);
+        my $mtime = DateTime->from_epoch(
+            epoch     => $file_stat->mtime,
+            time_zone => $cu->time_zone,
+        );
+        my $description = sprintf( '%s %s', $mtime->ymd, $mtime->hms );
+        push(
+            @result,
+            {
+                name        => $p->basename,
+                description => $description,
+                isType      => ( $p->is_dir ? "dir" : "file" ),
+            },
+        );
+    }
+
+    $c->render(
+        json => {
+            message     => "Success",
+            files       => \@result,
+            dirBasename => path($dir)->basename,
+            created     => DateTime->now( time_zone => $cu->time_zone ),
+            request     => sprintf( "%s %s", $c->req->method, $c->req->url->path->to_abs_string ),
+        },
+    )
 };
 
 app->start;
