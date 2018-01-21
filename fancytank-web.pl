@@ -239,8 +239,34 @@ get '/' => sub {
 get '/dashboard' => sub {
     my $c = shift;
 
+    my $cu = $c->stash("cu");
+    my $home_dir = $cu->home_dir;
+
+    my $count_recent = `find $home_dir -mtime -2 | wc -l`;
+
+    my $count_files = `find $home_dir | wc -l`;
+    chomp $count_files;
+    $c->app->log->debug( sprintf( "%s: count_files(%d)", $cu->email, $count_files ) );
+
+    my %storage;
+    {
+        my @lines = `df -h --output=source,size,used,avail $home_dir`;
+        my ( undef, $sized, $used, $avail ) = split q{ }, $lines[1];
+        $c->app->log->debug( sprintf( "%s: sized(%s), used(%s), avail(%s)", $cu->email, $sized, $used, $avail ) );
+        %storage = (
+            sized => $sized,
+            used  => $used,
+            avail => $avail,
+        );
+    }
+
     my $count_users = $c->rs("User")->count;
-    $c->stash( count_users => $count_users );
+    $c->stash(
+        count_recent => $count_recent,
+        count_users  => $count_users,
+        count_files  => $count_files,
+        storage      => \%storage,
+    );
 
     $c->render(template => 'dashboard');
 };
