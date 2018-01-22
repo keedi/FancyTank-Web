@@ -1,5 +1,18 @@
     % for my $path (@$items) {
-      % my $sub_url = ( $base_dir ? "$base_dir/" : q{} ) . $path->basename;
+      % use Path::Tiny;
+      % use Try::Tiny;
+      % my $p1 = Path::Tiny::path( $cu->home_dir )->realpath;
+      % my ( $p2, $error ) = try {
+        % my $_path = $path->realpath;
+        % ( $_path, undef );
+      % }
+      % catch {
+        % ( undef, $_ );
+      % };
+      % next unless $p2;
+      % next unless $p1->subsumes($p2);
+      % ( my $sub_url = $p2 ) =~ s{^$p1}{};
+      % $sub_url =~ s{^/}{};
       <tr
         class="ft-table-row-file"
         data-api-url="<%= url_for("/api/files/$sub_url") %>"

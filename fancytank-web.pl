@@ -140,6 +140,22 @@ helper sorted_dirs_files => sub {
     return ( \@sorted_dirs, \@sorted_files );
 };
 
+helper recent_files => sub {
+    my ( $c, $home_dir ) = @_;
+
+    my @files = `find $home_dir -mtime -2`;
+    chomp @files;
+
+    my @encoded_files = map { Mojo::Util::decode("UTF-8", $_) } @files;
+    my @result_files;
+    for my $file (@encoded_files) {
+        my $encoded_path = path($file);
+        push @result_files, $encoded_path;
+    }
+
+    return \@result_files;
+};
+
 helper get_req_dir => sub {
     my ( $c, $base_dir, $remain_dir ) = @_;
 
@@ -260,12 +276,16 @@ get '/dashboard' => sub {
         );
     }
 
+    my $files = $c->recent_files($home_dir);
+
     my $count_users = $c->rs("User")->count;
     $c->stash(
         count_recent => $count_recent,
         count_users  => $count_users,
         count_files  => $count_files,
         storage      => \%storage,
+        files        => $files,
+        base_dir     => q{},
     );
 
     $c->render(template => 'dashboard');
